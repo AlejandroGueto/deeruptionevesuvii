@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eruptio Vesuvii - Escape Room Latino</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Ta'anga'i (Lucide Icons) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Letrakuéra -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,700;1,900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Merriweather', serif;
+            background-color: #1a1a1a; 
+            color: #e2e8f0; 
+            /* Gradiente oscuro volcánico */
+            background-image: radial-gradient(circle at center, #2d1313 0%, #0a0a0a 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+        .greek-display { font-family: 'Playfair Display', serif; }
+        
+        /* Kuatia yma (Pergamino) */
+        .pergamino {
+            background-color: #f4e8d1;
+            color: #332b22;
+            box-shadow: inset 0 0 50px rgba(139, 115, 85, 0.4), 0 10px 25px rgba(0,0,0,0.9);
+            border: 1px solid #c7b593;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" opacity="0.06"><rect width="200" height="200" fill="%238b7355"/><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" stitchTiles="stitch"/></filter><rect width="200" height="200" filter="url(%23n)" opacity="0.6"/></svg>');
+        }
+        .hidden-stage { display: none; }
+        
+        .input-latino {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #64748b;
+            color: #f8fafc;
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .input-latino:focus { border-bottom-color: #f97316; }
+        
+        .candado-input {
+            width: 3rem;
+            height: 4rem;
+            font-size: 1.5rem;
+            text-align: center;
+            background: #2a0a0a;
+            border: 2px solid #7f1d1d;
+            border-radius: 0.5rem;
+            color: #f97316;
+            font-family: 'Cinzel', serif;
+        }
+        .candado-input:focus {
+            border-color: #f97316;
+            outline: none;
+            box-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
+        }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        .word-token { display: inline-block; padding: 0 4px; cursor: pointer; transition: 0.2s; border-radius: 4px; border-bottom: 2px solid transparent; }
+        .word-token:hover { color: #9a3412; background: rgba(154, 52, 18, 0.1); border-bottom-color: #9a3412; }
+        .drawer { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 200; }
+        .lang-tag { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 900; text-transform: uppercase; margin-right: 8px; display: inline-block; }
+        
+        /* Modal UI Custom */
+        .custom-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(4px); }
+        .custom-modal.active { opacity: 1; pointer-events: auto; }
+    </style>
+</head>
+<body class="flex flex-col items-center p-4 md:p-8 relative">
+
+    <!-- Custom Prompt Modal for API Key -->
+    <div id="apiModal" class="custom-modal">
+        <div class="bg-slate-900 border border-orange-900 p-8 rounded-lg shadow-2xl max-w-md w-full text-center">
+            <h3 class="font-cinzel text-xl text-orange-500 mb-4 flex items-center justify-center gap-2">
+                <i data-lucide="key"></i> Configurar Clavis (Oráculo)
+            </h3>
+            <p class="text-sm text-slate-400 mb-4">Introduce tu API Key de Groq para habilitar el diccionario avanzado y los retos generativos.</p>
+            <input type="text" id="apiKeyInput" class="w-full bg-black/50 border border-orange-900/50 text-white p-3 rounded mb-4 focus:border-orange-500 outline-none text-center" placeholder="gsk_...">
+            <div class="flex gap-4 justify-center">
+                <button onclick="closeApiModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded font-cinzel text-sm uppercase transition">Cancelar</button>
+                <button onclick="saveApiKey()" class="px-4 py-2 bg-orange-700 hover:bg-orange-600 text-white rounded font-cinzel text-sm uppercase transition">Guardar</button>
+            </div>
+            <p id="apiToast" class="text-emerald-400 text-sm mt-4 hidden font-bold">¡Clavis guardada con éxito!</p>
+        </div>
+    </div>
+
+    <!-- Akã ha Ára ra'ãha -->
+    <header class="w-full max-w-5xl flex justify-between items-center border-b border-orange-900/50 pb-4 mb-8 hidden-stage" id="gameHeader">
+        <div class="text-xl md:text-2xl font-cinzel text-orange-500 tracking-widest flex items-center gap-2">
+            <i data-lucide="ship" class="w-6 h-6"></i> Classis Misenensis
+        </div>
+        <div class="flex items-center gap-3 text-red-400 font-cinzel text-2xl font-bold bg-red-950/80 px-4 py-2 rounded-md shadow-[0_0_15px_rgba(153,27,27,0.5)] border border-red-800">
+            <i data-lucide="hourglass" class="w-6 h-6 animate-pulse"></i>
+            <span id="timerDisplay">45:00</span>
+        </div>
+    </header>
+
+    <!-- ÑEPYRŨHA (Intro) -->
+    <div id="introStage" class="w-full max-w-3xl flex flex-col items-center text-center mt-6 md:mt-12 space-y-8">
+        <h1 class="text-5xl md:text-6xl text-orange-500 tracking-widest uppercase text-shadow-sm flex flex-col items-center">
+            Eruptio<br><span class="text-4xl md:text-5xl text-slate-300 mt-2">Vesuvii</span>
+        </h1>
+        
+        <div class="bg-black/60 p-8 rounded-lg border border-orange-900/50 shadow-2xl backdrop-blur-sm w-full max-w-2xl">
+            
+            <!-- Vídeo de Contextualización (Pompeya / Vesubio) -->
+            <div class="mb-8 rounded-lg border border-orange-900/50 overflow-hidden shadow-inner bg-black w-full aspect-video relative">
+                <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/dY_3ggKg0Bc?start=15" title="Erupción del Vesubio" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <p class="text-lg md:text-xl leading-relaxed mb-8 text-slate-300 text-justify">
+                "Miseno, 24 de agosto del 79 d.C. El monte Vesubio acaba de estallar, oscureciendo el cielo. El almirante Plinio el Viejo ha zarpado valientemente para rescatar a los supervivientes en la costa, pero una densa nube de gas tóxico y cenizas amenaza con sepultarlo todo. Plinio el Joven ha redactado un informe crucial. Descifrad sus palabras para activar el faro del puerto y guiar a la flota de regreso. Tenéis 45 minutos antes de que el flujo piroclástico os alcance. Vuestra única salvación: el latín."
+            </p>
+            
+            <!-- Umi oheka va'erã héra (Team Name) -->
+            <div class="mb-6 bg-orange-950/30 p-6 rounded border border-orange-900/50">
+                <label for="teamName" class="block text-orange-500 font-cinzel text-lg mb-3">Identificación de los Escribas:</label>
+                <input type="text" id="teamName" class="w-full bg-black/50 border-2 border-orange-900 text-white p-3 rounded font-cinzel focus:border-orange-500 focus:outline-none transition text-center text-lg shadow-inner" placeholder="Escribid vuestros nombres (Ej: Lucía, Marcos y Elena)" autocomplete="off">
+                <p id="name-error" class="text-red-400 text-sm mt-3 hidden font-bold">⚠️ Debéis identificaros antes de acceder al papiro.</p>
+            </div>
+
+            <!-- Ñemongeta API (Groq) -->
+            <div class="mb-8 bg-orange-950/30 p-6 rounded border border-orange-900/50 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="text-left">
+                    <p class="text-orange-500 font-cinzel text-md mb-1 flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> El Oráculo de Apolo</p>
+                    <p class="text-xs text-slate-400">Diccionario inteligente y retos dinámicos (Groq API).</p>
+                </div>
+                <button onclick="openApiModal()" class="px-4 py-2 bg-orange-900 hover:bg-orange-800 text-slate-200 text-xs font-cinzel rounded transition uppercase">Activar Clavis</button>
+            </div>
+
+            <button onclick="startGame()" class="px-8 py-4 bg-gradient-to-r from-orange-700 to-red-800 hover:from-orange-600 hover:to-red-700 text-white font-cinzel font-bold text-xl rounded transition transform hover:scale-105 shadow-[0_0_15px_rgba(234,88,12,0.4)] w-full md:w-auto border border-orange-500/50">
+                Leer el Papiro
+            </button>
+        </div>
+    </div>
+
+    <!-- ÑEMBOSARÁI (Game Stage) -->
+    <div id="gameStage" class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-5 gap-8 hidden-stage">
+        
+        <!-- Oga yke asu: Kuatia ha Porandu Guasu -->
+        <div class="lg:col-span-2 flex flex-col h-full gap-6">
+            <div class="pergamino p-6 md:p-8 rounded-lg relative">
+                <div class="absolute top-4 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-amber-900/20 rounded-full"></div>
+                <h2 class="text-2xl font-cinzel text-center border-b-2 border-amber-900/20 pb-4 mb-6 mt-2 font-bold uppercase text-amber-950 tracking-widest">
+                    Epistula ad Tacitum
+                </h2>
+                <div id="latin-container" class="text-lg leading-loose text-justify font-medium">
+                    <!-- JS omoingéta ko'ápe umi ñe'ẽ -->
+                </div>
+                <div class="mt-8 pt-4 border-t border-amber-900/20 text-sm italic text-amber-900/70">
+                    <p class="mb-2 font-bold flex items-center gap-2"><i data-lucide="info" class="w-4 h-4"></i> Haz clic en cualquier palabra para consultar el Oráculo.</p>
+                    <p>Las palabras subrayadas por la ceniza guardan secretos sintácticos vitales.</p>
+                </div>
+            </div>
+
+            <!-- Porandu Guasu (Reto Magistral) -->
+            <div class="bg-black/60 border border-orange-900/50 p-6 rounded-lg shadow-lg relative overflow-hidden">
+                <h3 class="text-xl text-orange-500 mb-4 flex items-center gap-2 font-cinzel">
+                    <i data-lucide="flame" class="w-5 h-5"></i> Reto Magistral
+                </h3>
+                <p class="text-sm text-slate-300 mb-4">¿Necesitáis repasar antes de enfrentaros a las pruebas? El Oráculo puede generar un reto aleatorio de comprensión.</p>
+                <button onclick="generateExercise()" class="w-full py-3 bg-orange-900 hover:bg-orange-800 text-white rounded font-cinzel text-sm uppercase tracking-widest transition-all shadow">Generar Reto</button>
+                <div id="exercise-area" class="hidden mt-6 pt-6 border-t border-orange-900/50"></div>
+            </div>
+        </div>
+
+        <!-- Oga yke akatúa: Umi Ñeha'ã -->
+        <div class="lg:col-span-3 flex flex-col space-y-6">
+            
+            <!-- ÑEHA'Ã 1 -->
+            <div id="prueba1" class="bg-black/60 border border-orange-900/50 p-6 rounded-lg shadow-lg relative overflow-hidden transition-all duration-500">
+                <div class="absolute top-0 left-0 w-1 h-full bg-orange-500"></div>
+                <h3 class="text-2xl text-orange-500 mb-4 flex items-center gap-2 font-cinzel">
+                    <span class="bg-orange-900/50 p-2 rounded text-orange-300 border border-orange-700 text-sm">I</span> Las Cenizas de la Sintaxis
+                </h3>
+                <p class="mb-6 text-slate-300">Para encender el primer fuego del faro, identificad estas tres estructuras en la narración de Plinio. Escribid la <span class="font-bold text-orange-400">palabra exacta</span> en latín.</p>
+                
+                <div class="space-y-4">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+                        <label class="text-sm font-bold text-slate-400 w-full md:w-2/3">1. Verbo semideponente en 3ª persona del singular que significa "se atreve":</label>
+                        <input type="text" id="p1-q1" class="input-latino w-full md:w-1/3" autocomplete="off" spellcheck="false" placeholder="verbo">
+                    </div>
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+                        <label class="text-sm font-bold text-slate-400 w-full md:w-2/3">2. Sustantivo de la 4ª declinación usado en ablativo plural para protegerse:</label>
+                        <input type="text" id="p1-q2" class="input-latino w-full md:w-1/3" autocomplete="off" spellcheck="false" placeholder="sustantivo">
+                    </div>
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+                        <label class="text-sm font-bold text-slate-400 w-full md:w-2/3">3. Participio de presente activo (nominativo singular) que denota que no muestra miedo:</label>
+                        <input type="text" id="p1-q3" class="input-latino w-full md:w-1/3" autocomplete="off" spellcheck="false" placeholder="participio">
+                    </div>
+                </div>
+                <div class="mt-6 text-right">
+                    <button onclick="checkPrueba1()" class="px-6 py-2 bg-orange-700 hover:bg-orange-600 text-white font-bold font-cinzel rounded transition uppercase tracking-widest">Activar Faro I</button>
+                </div>
+                <p id="p1-error" class="text-red-400 text-sm mt-3 hidden text-right">La ceniza bloquea la luz (-50 pts). Revisa la ortografía.</p>
+            </div>
+
+            <!-- ÑEHA'Ã 2 -->
+            <div id="prueba2" class="bg-black/60 border border-orange-900/50 p-6 rounded-lg shadow-lg relative overflow-hidden transition-all duration-500 opacity-50 pointer-events-none">
+                <div class="absolute top-0 left-0 w-1 h-full bg-yellow-500"></div>
+                <h3 class="text-2xl text-yellow-500 mb-4 flex items-center gap-2 font-cinzel">
+                    <span class="bg-yellow-900/50 p-2 rounded text-yellow-300 border border-yellow-700 text-sm">II</span> El Relato del Superviviente
+                </h3>
+                <p class="mb-6 text-slate-300">Debéis interpretar correctamente los momentos más dramáticos del papiro para comprender la magnitud de la tragedia.</p>
+                
+                <div class="space-y-6">
+                    <div class="bg-orange-950/20 p-4 rounded border border-orange-900/40">
+                        <p class="font-cinzel text-orange-200 mb-3 text-lg italic">"Ille, re mira visa, navem parari iubet"</p>
+                        <div class="space-y-2">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="t1" value="a" class="w-4 h-4 text-yellow-500 bg-slate-800 border-slate-600">
+                                <span class="group-hover:text-yellow-300 transition text-sm">a) Él, vista esta cosa asombrosa, ordena que se prepare un barco.</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="t1" value="b" class="w-4 h-4 text-yellow-500 bg-slate-800 border-slate-600">
+                                <span class="group-hover:text-yellow-300 transition text-sm">b) Aquel vio una cosa asombrosa y preparó una nave.</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="t1" value="c" class="w-4 h-4 text-yellow-500 bg-slate-800 border-slate-600">
+                                <span class="group-hover:text-yellow-300 transition text-sm">c) Para ver la asombrosa situación, mandó zarpar la nave.</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="bg-orange-950/20 p-4 rounded border border-orange-900/40">
+                        <p class="font-cinzel text-orange-200 mb-3 text-lg italic">"Cinis gravis iam incidebat"</p>
+                        <div class="space-y-2">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="t2" value="a" class="w-4 h-4 text-yellow-500 bg-slate-800 border-slate-600">
+                                <span class="group-hover:text-yellow-300 transition text-sm">a) Una ceniza grave incendió todo rápidamente.</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="t2" value="b" class="w-4 h-4 text-yellow-500 bg-slate-800 border-slate-600">
+                                <span class="group-hover:text-yellow-300 transition text-sm">b) Una pesada ceniza ya caía.</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="t2" value="c" class="w-4 h-4 text-yellow-500 bg-slate-800 border-slate-600">
+                                <span class="group-hover:text-yellow-300 transition text-sm">c) Los incidentes graves estaban llenos de ceniza.</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="bg-orange-950/20 p-4 rounded border border-orange-900/40">
+                        <p class="font-cinzel text-orange-200 mb-3 text-lg italic">"Cervicalia manibus capitibusque imponunt, ne lapidibus vulnerentur."</p>
+                        <div class="space-y-2">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="t3" value="a" class="w-4 h-4 text-yellow-500 bg-slate-800 border-slate-600">
+                                <span class="group-hover:text-yellow-300 transition text-sm">a) Se colocan almohadas en las cabezas con las manos, para no ser heridos por las piedras.</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="t3" value="b" class="w-4 h-4 text-yellow-500 bg-slate-800 border-slate-600">
+                                <span class="group-hover:text-yellow-300 transition text-sm">b) Las cabezas y las manos imponen que las almohadas y piedras no les hagan daño.</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="t3" value="c" class="w-4 h-4 text-yellow-500 bg-slate-800 border-slate-600">
+                                <span class="group-hover:text-yellow-300 transition text-sm">c) No son vulnerados por las piedras gracias a las manos y almohadas en sus cabezas.</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Kuatia Ñembohasa Paite -->
+                    <div class="bg-orange-950/20 p-4 rounded border border-orange-900/40 mt-4">
+                        <label for="fullTranslation" class="font-cinzel text-yellow-400 mb-3 text-lg block flex items-center gap-2">
+                            <i data-lucide="feather" class="w-5 h-5"></i>
+                            Reconstrucción del Documento
+                        </label>
+                        <p class="text-sm text-slate-400 mb-3">Redactad aquí la versión final en español de todo el texto para los anales de la historia.</p>
+                        <textarea id="fullTranslation" class="w-full h-32 p-4 bg-black/50 border border-yellow-900/50 text-slate-200 rounded focus:border-yellow-500 focus:outline-none transition font-serif" placeholder="A la hora séptima, mi madre indica a mi tío..."></textarea>
+                    </div>
+                </div>
+                <div class="mt-6 text-right">
+                    <button onclick="checkPrueba2()" class="px-6 py-2 bg-yellow-700 hover:bg-yellow-600 text-white font-bold font-cinzel rounded transition uppercase tracking-widest">Activar Faro II</button>
+                </div>
+                <p id="p2-error" class="text-red-400 text-sm mt-3 hidden text-right">La traducción es imprecisa (-50 pts). Revisa las opciones y asegura que has rellenado el texto libre.</p>
+            </div>
+
+            <!-- ÑEHA'Ã 3 -->
+            <div id="prueba3" class="bg-black/60 border border-orange-900/50 p-6 rounded-lg shadow-lg relative overflow-hidden transition-all duration-500 opacity-50 pointer-events-none">
+                <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+                <h3 class="text-2xl text-red-500 mb-4 flex items-center gap-2 font-cinzel">
+                    <span class="bg-red-900/50 p-2 rounded text-red-300 border border-red-700 text-sm">III</span> El Código de la Flota
+                </h3>
+                <p class="mb-6 text-slate-300">Los barcos esperan vuestra señal de luces. Aportad los <span class="text-red-400 font-bold">cinco dígitos</span> extraídos de la gramática y el contexto literario de esta epístola.</p>
+                
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
+                    <!-- Lock 1 -->
+                    <div class="bg-red-950/20 p-3 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
+                        <p class="text-[10px] md:text-xs text-slate-400 mb-3">Nº de declinación a la que pertenece la última palabra del texto ("<strong>dies</strong>").</p>
+                        <input type="number" id="lock1" min="1" max="5" class="candado-input mt-auto">
+                    </div>
+                    <!-- Lock 2 -->
+                    <div class="bg-red-950/20 p-3 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
+                        <p class="text-[10px] md:text-xs text-slate-400 mb-3">Nº de conjugación del verbo "<strong>properat</strong>" (se apresura).</p>
+                        <input type="number" id="lock2" min="1" max="4" class="candado-input mt-auto">
+                    </div>
+                    <!-- Lock 3 -->
+                    <div class="bg-red-950/20 p-3 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
+                        <p class="text-[10px] md:text-xs text-slate-400 mb-3">Orden tradicional (1 a 6) del caso que tiene la palabra "<strong>lapidibus</strong>".</p>
+                        <input type="number" id="lock3" min="1" max="6" class="candado-input mt-auto">
+                    </div>
+                    <!-- Lock 4 -->
+                    <div class="bg-red-950/20 p-3 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
+                        <p class="text-[10px] md:text-xs text-slate-400 mb-3">Número exacto de <strong>Ablativos Absolutos</strong> en este texto.</p>
+                        <input type="number" id="lock4" min="0" max="9" class="candado-input mt-auto">
+                    </div>
+                    <!-- Lock 5 -->
+                    <div class="bg-red-950/20 p-3 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
+                        <p class="text-[10px] md:text-xs text-slate-400 mb-3">Subgénero en prosa (1:Épica, 2:Teatro, 3:Epístola, 4:Oratoria).</p>
+                        <input type="number" id="lock5" min="1" max="4" class="candado-input mt-auto">
+                    </div>
+                </div>
+
+                <div class="mt-4 text-center w-full">
+                    <button onclick="checkPrueba3()" class="w-full py-4 bg-gradient-to-r from-red-900 to-red-700 hover:from-red-800 hover:to-red-600 text-white font-cinzel font-bold text-xl rounded transition shadow-[0_0_20px_rgba(153,27,27,0.6)] border border-red-500/50 uppercase tracking-widest">
+                        ILUMINAR EL PUERTO
+                    </button>
+                    <p id="p3-error" class="text-red-400 text-sm mt-3 hidden">El faro no se enciende (-50 pts). La combinación es incorrecta.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- OIKÓVA Paha (Victory Stage) -->
+    <div id="victoryStage" class="w-full max-w-3xl flex flex-col items-center text-center mt-12 space-y-4 hidden-stage">
+        <h1 class="text-5xl md:text-6xl font-cinzel text-yellow-500 text-shadow-sm mb-2">¡Flota a Salvo!</h1>
+        <div class="text-8xl mb-2">⛵🌅</div>
+        <p class="text-xl md:text-2xl text-slate-300 leading-relaxed max-w-2xl mb-4">
+            Vuestro profundo conocimiento del latín ha descifrado el papiro a tiempo. El faro de Miseno brilla en la oscuridad de la ceniza, guiando a los barcos de vuelta a puerto.
+        </p>
+        
+        <p class="mt-4 text-orange-400 font-cinzel font-bold text-xl uppercase tracking-widest bg-orange-950/50 p-4 rounded-lg border border-orange-900">Tu resultado ha sido registrado en los anales y no puede modificarse.</p>
+
+        <!-- Senado Kuatia -->
+        <div class="bg-black/80 p-6 md:p-8 rounded-lg border border-yellow-500/50 mt-4 w-full max-w-xl shadow-[0_0_30px_rgba(234,179,8,0.2)] relative">
+            <div id="formStatus" class="absolute top-2 right-2 flex items-center gap-1 bg-slate-900 px-3 py-1 rounded-full border border-slate-700">
+                <div class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" id="statusDot"></div>
+                <span class="text-[10px] text-slate-400 uppercase tracking-widest" id="statusText">Enviando mensaje imperial...</span>
+            </div>
+
+            <h3 class="text-2xl font-cinzel text-yellow-500 mb-4 border-b border-yellow-500/30 pb-3 uppercase tracking-widest mt-4">Acta de Supervivencia</h3>
+            
+            <p class="text-slate-300 mb-6 text-lg">Escribas Heroicos: <span id="finalTeamName" class="text-yellow-400 font-bold font-cinzel text-xl ml-2"></span></p>
+            
+            <div class="grid grid-cols-2 gap-4 my-6 bg-orange-950/30 p-4 rounded border border-orange-900/50 shadow-inner">
+                <div class="flex flex-col items-center justify-center p-2">
+                    <p class="text-xs text-slate-400 uppercase tracking-widest mb-1 text-center">Tiempo Sobrante</p>
+                    <p id="finalTime" class="text-3xl text-emerald-400 font-bold font-cinzel"></p>
+                </div>
+                <div class="flex flex-col items-center justify-center p-2 border-l border-orange-900/50">
+                    <p class="text-xs text-slate-400 uppercase tracking-widest mb-1 text-center">Intentos Fallidos</p>
+                    <p id="finalMistakes" class="text-3xl text-red-400 font-bold font-cinzel"></p>
+                </div>
+            </div>
+            
+            <div class="bg-yellow-900/40 p-6 rounded border border-yellow-500/50 mb-4 relative overflow-hidden">
+                <p class="text-sm text-yellow-200 uppercase tracking-widest mb-2">Puntuación Final</p>
+                <p id="finalScore" class="text-5xl text-yellow-400 font-bold font-cinzel drop-shadow-[0_0_10px_rgba(250,204,21,0.8)]"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- OIKÓVA Vai (Defeat Stage) -->
+    <div id="defeatStage" class="w-full max-w-3xl flex flex-col items-center text-center mt-20 space-y-6 hidden-stage">
+        <h1 class="text-5xl md:text-6xl font-cinzel text-red-600 text-shadow-sm mb-4">Sepultados por la Ceniza</h1>
+        <div class="text-8xl mb-4">🌋</div>
+        <p class="text-xl md:text-2xl text-slate-300 leading-relaxed max-w-2xl">
+            El flujo piroclástico ha alcanzado Miseno. Sin la luz del faro, las naves se han estrellado contra la costa. La historia de Plinio, y la vuestra, terminan aquí.
+        </p>
+        <p class="mt-8 text-red-500 font-cinzel font-bold text-xl uppercase tracking-widest bg-red-950/50 p-4 rounded-lg border border-red-900">La furia del volcán no concede segundas oportunidades.</p>
+        <p class="text-slate-400 mt-2 text-sm italic" id="defeatStatusText">Notificando la tragedia a Roma...</p>
+    </div>
+
+    <!-- Oikuaapáva (Oracle Drawer) -->
+    <div id="oracle-drawer" class="fixed inset-y-0 right-0 w-full md:w-[650px] bg-slate-900 shadow-2xl translate-x-full drawer p-8 md:p-12 overflow-y-auto border-l border-orange-900 no-print text-slate-200">
+        <button onclick="closeOracle()" class="mb-12 text-slate-400 hover:text-orange-500 flex items-center gap-4 font-cinzel text-sm uppercase transition-all tracking-widest font-black">
+            <i data-lucide="arrow-right" class="w-4 h-4"></i> Regresar
+        </button>
+        <div id="oracle-content"></div>
+    </div>
+
+    <!-- JS Rembiapo -->
+    <script>
+        // Variables de estado
+        let timerInterval;
+        let timeRemaining = 45 * 60; 
+        let teamName = "";
+        let mistakes = 0;
+        const BASE_SCORE = 3000; 
+
+        // Texto de Plinio el Joven (Ep. 6.16)
+        const latinText = "Hora septima mater mea avunculo indicat nubem inusitatam apparere. Ille, re mira visa, navem parari iubet ut naturam montis exploret; mox tamen epistulam accipit a Rectina, quae exterrita periculum magnum nuntiabat. Tum avunculus consilium mutat et, ubi periculum intellegit, auxilium ferre audet. Naves statim deducuntur et ille ad litus properat unde alii fugiunt. Cinis gravis iam incidebat, atque gubernator perterritus clamat: \"Fuge, domine!\". Sed Plinius, nullam formidinem ostendens, eum acriter hortatur: \"Fortes fortuna iuvat: flecte cursum ad Pomponianum statim!\". Ibi amicum suum trepidantem invenit, quem complexus consolatur. Nocte flammae ingentes ex monte lucent, sed ille in tanto periculo dormire solet. Postero die, sole prorsus obscurato, viri e domo exeunt. Cervicalia manibus capitibusque imponunt, ne lapidibus vulnerentur. Vento autem flante, spiritus eius a vapore crasso mox clauditur. Vir clarissimus ad terram cadit et prope mare moritur. Post tres dies corpus inventum est integrum, requiescenti similius.";
+
+        // Diccionario Manual Precargado (para palabras esenciales si no hay API)
+        const customDict = {
+            'hora': { enunciado: "hora, -ae, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Ablativo (C. Circunstancial Tiempo)", def: "a la hora", etym: "Del gr. ὥρα" } },
+            'mater': { enunciado: "mater, matris, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Nominativo (Sujeto)", def: "la madre", etym: "PIE *méh₂tēr" } },
+            'avunculo': { enunciado: "avunculus, -i, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Dativo (C. Indirecto)", def: "al tío (materno)", etym: "Diminutivo de avus" } },
+            'nubem': { enunciado: "nubes, nubis, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Acusativo (Sujeto de Or. Infinitivo)", def: "una nube", etym: "PIE *sneydʰ-" } },
+            'inusitatam': { enunciado: "inusitatus, -a, -um", es: { morph: "Adjetivo, Fem, Sing", syntax: "Acusativo (Adyacente)", def: "inusual, no acostumbrada", etym: "De in- + usitatus" } },
+            'apparere': { enunciado: "appareo, -ere", es: { morph: "Verbo, Infinitivo Pres Activo", syntax: "Núcleo del Predicado (Or. Subord.)", def: "aparecer", etym: "De ad- + pareo" } },
+            'ille': { enunciado: "ille, illa, illud", es: { morph: "Pronombre Demostrativo, Masc, Sing", syntax: "Nominativo (Sujeto)", def: "aquel, él (Plinio el Viejo)", etym: "Latín arcaico olle" } },
+            're': { enunciado: "res, rei, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Ablativo (Sujeto de Abl. Absoluto)", def: "la cosa, la situación", etym: "PIE *reH₁ís" } },
+            'mira': { enunciado: "mirus, -a, -um", es: { morph: "Adjetivo, Fem, Sing", syntax: "Ablativo (Adyacente)", def: "maravillosa, asombrosa", etym: "Del verbo mirari" } },
+            'visa': { enunciado: "video, -ere, vidi, visum", es: { morph: "Participio Perfecto Pasivo, Fem, Sing", syntax: "Ablativo (Núcleo de Abl. Absoluto)", def: "vista", etym: "PIE *weyd-" } },
+            'iubet': { enunciado: "iubeo, -ere", es: { morph: "Verbo, 3ª pers. sing, Pres. Ind. Act", syntax: "Núcleo del Predicado", def: "ordena, manda", etym: "PIE *yowdʰ-" } },
+            'audet': { enunciado: "audeo, -ere", es: { morph: "Verbo Semideponente, 3ª sing, Pres. Ind", syntax: "Núcleo del Predicado", def: "se atreve", exp:"Verbo semideponente: forma activa en tiempos de presente, pero forma pasiva con significado activo en tiempos de perfecto (ausus sum).", etym: "De avidus" } },
+            'cinis': { enunciado: "cinis, cineris, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Nominativo (Sujeto)", def: "la ceniza", etym: "PIE *ken-" } },
+            'fuge': { enunciado: "fugio, -ere", es: { morph: "Verbo, 2ª pers. sing, Imperativo Act", syntax: "Núcleo del Predicado", def: "¡huye!", etym: "PIE *bʰewg-" } },
+            'formidinem': { enunciado: "formido, -inis, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Acusativo (C. Directo)", def: "el terror, el miedo", etym: "De formidare" } },
+            'ostendens': { enunciado: "ostendo, -ere", es: { morph: "Participio Presente Activo, Masc, Sing", syntax: "Nominativo (Concertado con Plinius)", def: "mostrando", etym: "De ob- + tendo" } },
+            'hortatur': { enunciado: "hortor, -ari", es: { morph: "Verbo Deponente, 3ª sing, Pres. Ind", syntax: "Núcleo del Predicado", def: "exhorta, anima", exp: "Verbo deponente: forma pasiva pero significado activo.", etym: "PIE *gʰer-" } },
+            'dormire': { enunciado: "dormio, -ire", es: { morph: "Verbo, Infinitivo Presente Act", syntax: "C. Directo / Predicativo", def: "dormir", etym: "PIE *drem-" } },
+            'solet': { enunciado: "soleo, -ere", es: { morph: "Verbo Semideponente, 3ª sing, Pres. Ind", syntax: "Núcleo del Predicado", def: "acostumbra, suele", etym: "Desconocida" } },
+            'sole': { enunciado: "sol, solis, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Ablativo (Sujeto de Abl. Absoluto)", def: "el sol", etym: "PIE *sóh₂wl̥" } },
+            'obscurato': { enunciado: "obscuro, -are", es: { morph: "Participio Perfecto Pasivo, Masc, Sing", syntax: "Ablativo (Núcleo de Abl. Absoluto)", def: "oscurecido", etym: "De obscurus" } },
+            'manibus': { enunciado: "manus, -us, f", es: { morph: "Sustantivo, Fem, Plural", syntax: "Ablativo (C. Circunstancial Instrumento)", def: "con las manos", exp: "Pertenece a la 4ª declinación a pesar de ser femenino.", etym: "PIE *meh₂-r-" } },
+            'capitibusque': { enunciado: "caput, -itis, n + -que", es: { morph: "Sustantivo, Neut, Plural + enclítica", syntax: "Dativo (C. Indirecto / Régimen)", def: "y en las cabezas", etym: "PIE *kap-" } },
+            'lapidibus': { enunciado: "lapis, -idis, m", es: { morph: "Sustantivo, Masc, Plural", syntax: "Ablativo (C. Agente / Causa)", def: "por las piedras", etym: "PIE *lep-" } },
+            'moritur': { enunciado: "morior, mori, mortuus sum", es: { morph: "Verbo Deponente, 3ª sing, Pres. Ind", syntax: "Núcleo del Predicado", def: "muere", etym: "PIE *mer-" } },
+            'dies': { enunciado: "dies, diei, m/f", es: { morph: "Sustantivo, Masc, Plural", syntax: "Acusativo (C. Circunstancial Extensión)", def: "días", exp: "Pertenece a la 5ª declinación.", etym: "PIE *dyew-" } }
+        };
+
+        window.onload = function() {
+            lucide.createIcons();
+            
+            const container = document.getElementById('latin-container');
+            container.innerHTML = latinText.split(/\s+/).map((word) => {
+                const cleanWord = word.replace(/[.,;:!?"]/g, '');
+                return `<span class="word-token" onclick="analyze('${cleanWord}')">${word}</span>`;
+            }).join(' ');
+
+            checkGameState();
+        };
+
+        function checkGameState() {
+            const status = localStorage.getItem('vesubio_status'); 
+            if (status === 'won') {
+                teamName = localStorage.getItem('vesubio_team') || "Escriba";
+                document.getElementById('finalTeamName').innerText = teamName;
+                document.getElementById('finalTime').innerText = localStorage.getItem('vesubio_timeStr') || "00:00";
+                document.getElementById('finalMistakes').innerText = localStorage.getItem('vesubio_mistakes') || "0";
+                document.getElementById('finalScore').innerText = localStorage.getItem('vesubio_score') || "0 pts";
+                hide('introStage'); show('victoryStage');
+                document.getElementById('formStatus').style.display = 'none'; 
+            } else if (status === 'lost') {
+                hide('introStage'); show('defeatStage');
+                document.getElementById('defeatStatusText').style.display = 'none';
+            } else if (status === 'playing') {
+                const endTime = parseInt(localStorage.getItem('vesubio_endTime'));
+                teamName = localStorage.getItem('vesubio_team');
+                mistakes = parseInt(localStorage.getItem('vesubio_mistakes')) || 0;
+                
+                const now = Date.now();
+                if (now >= endTime) { gameOver(); } 
+                else { timeRemaining = Math.floor((endTime - now) / 1000); resumeGame(); }
+            }
+        }
+
+        function show(id) { document.getElementById(id).classList.remove('hidden-stage'); }
+        function hide(id) { document.getElementById(id).classList.add('hidden-stage'); }
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        // ==========================================
+        // LATINITATIS PRO: ORACULUM API Y RETOS
+        // ==========================================
+        function openApiModal() {
+            document.getElementById('apiModal').classList.add('active');
+            document.getElementById('apiKeyInput').value = localStorage.getItem('groq_key') || '';
+        }
+        function closeApiModal() { document.getElementById('apiModal').classList.remove('active'); }
+        function saveApiKey() {
+            const k = document.getElementById('apiKeyInput').value.trim();
+            if(k) { 
+                localStorage.setItem('groq_key', k); 
+                document.getElementById('apiToast').classList.remove('hidden');
+                setTimeout(() => { document.getElementById('apiToast').classList.add('hidden'); closeApiModal(); }, 1500);
+            }
+        }
+
+        async function callAI(p, isExercise = false) {
+            let k = localStorage.getItem('groq_key'); 
+            if (!k) { openApiModal(); throw new Error("Falta Clavis API. Confígurala primero."); }
+            
+            let sysPrompt = isExercise 
+                ? "You are an Expert Latin Philologist. Create a multiple-choice question in Spanish about the provided Latin text of Pliny. Respond ONLY in valid JSON: {\"pregunta\":\"...\",\"opciones\":[\"...\",\"...\",\"...\"],\"correcta\":0,\"explicacion\":\"...\"}."
+                : "You are an Expert Latin Philologist. Respond in valid JSON format. Provide the FULL dictionary lemma in lowercase including genitive and gender for nouns as 'enunciado'. For 'morph', include gender/number for nouns, voice/person for verbs. For 'syntax', strictly identify the grammatical case and syntactical function. For 'etym', include Proto-Indo-European (PIE) roots. Fields: enunciado, es(morph, syntax, def, etym, exp). Respond ONLY in Spanish.";
+
+            const r = await fetch('https://api.groq.com/openai/v1/chat/completions', { 
+                method: 'POST', headers: { 'Authorization': `Bearer ${k}`, 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ 
+                    model: "llama-3.3-70b-versatile", 
+                    messages: [{ role: "system", content: sysPrompt }, { role: "user", content: p }], 
+                    temperature: 0.1, response_format: { type: "json_object" } 
+                }) 
+            });
+            const d = await r.json(); if (d.error) throw new Error(d.error.message); return d.choices[0].message.content;
+        }
+
+        function openOracle() { document.getElementById('oracle-drawer').classList.remove('translate-x-full'); }
+        function closeOracle() { document.getElementById('oracle-drawer').classList.add('translate-x-full'); }
+
+        async function analyze(word) {
+            openOracle(); 
+            const c = document.getElementById('oracle-content'); 
+            c.innerHTML = "<p class='py-48 text-center animate-pulse font-cinzel text-orange-400 uppercase tracking-widest'>Invocando el conocimiento de Apolo...</p>";
+            
+            const normalizedWord = word.toLowerCase();
+            
+            try {
+                let res;
+                if (customDict[normalizedWord]) {
+                    res = customDict[normalizedWord];
+                } else {
+                    res = JSON.parse(await callAI(`Analyze Latin word: "${word}" in context of Pliny the Younger's letter Ep. 6.16 (Vesuvius eruption). Be extremely precise with syntax: identify case and syntactic role.`));
+                }
+
+                c.innerHTML = `
+                    <div class="mb-10 border-b border-slate-700 pb-6 text-center">
+                        <h3 class="greek-display text-5xl md:text-7xl font-black text-white tracking-tighter mb-4">${word}</h3>
+                        <p class="text-xl font-bold text-orange-500 uppercase tracking-widest font-serif lowercase">${res.enunciado}</p>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="border-l-[6px] border-orange-600 pl-6">
+                            <span class="lang-tag bg-orange-900/40 text-orange-300 mb-4 font-black uppercase">Castellano</span>
+                            <p class="text-sm font-bold uppercase text-slate-300 mb-1">${res.es.morph}</p>
+                            <p class="text-sm font-bold text-yellow-400 mb-4 uppercase italic">Sintaxis: ${res.es.syntax}</p>
+                            <p class="text-2xl italic font-serif text-white mb-6 leading-tight">"${res.es.def}"</p>
+                            ${res.es.exp ? `<div class="bg-red-950/40 p-4 rounded-xl mb-6 text-yellow-200 text-sm font-serif border border-red-800/50 shadow-sm leading-relaxed"><b>Nota Gramatical:</b><br>${res.es.exp}</div>` : ''}
+                            <div class="bg-slate-800 p-4 rounded-xl text-sm italic leading-relaxed text-slate-400"><b>Etimología (Raíces PIE):</b><br>${res.es.etym || 'Desconocida'}</div>
+                        </div>
+                    </div>`;
+            } catch (e) { c.innerHTML = `<p class='p-6 bg-red-900/50 border border-red-500 text-red-200 rounded text-center font-bold'>Error IA: ${e.message}</p>`; }
+        }
+
+        async function generateExercise() {
+            const area = document.getElementById('exercise-area'); 
+            area.classList.remove('hidden'); 
+            area.innerHTML = "<p class='animate-pulse text-orange-500 uppercase font-cinzel text-sm tracking-widest text-center'>Componiendo Reto...</p>";
+            try {
+                const ex = JSON.parse(await callAI(`Genera test magistral sobre este fragmento latino de Plinio: "${latinText.substring(0,200)}".`, true));
+                area.innerHTML = `
+                    <h4 class="font-cinzel text-[11px] text-slate-400 mb-4 uppercase border-b border-slate-700 pb-2 tracking-widest">Examen Magistral</h4>
+                    <p class="mb-6 font-serif text-lg text-slate-200 leading-snug">${ex.pregunta}</p>
+                    <div class="space-y-3">
+                        ${ex.opciones.map((o, i) => `<button onclick="checkAns(${i}, ${ex.correcta}, '${ex.explicacion.replace(/'/g, "\\'")}')" class="block w-full text-left p-3 bg-black/50 rounded border border-orange-900/50 transition-all hover:bg-orange-900/40 text-slate-300 text-sm shadow-sm">${o}</button>`).join('')}
+                    </div>
+                    <div id="fb" class="mt-6 text-sm italic font-serif text-slate-400"></div>`;
+            } catch (e) { area.innerHTML = `<p class='text-red-400 text-sm text-center'>${e.message}</p>`; }
+        }
+
+        function checkAns(i, c, e) { 
+            const fb = document.getElementById('fb'); 
+            fb.innerHTML = i === c ? `✅ <span class="text-emerald-400 font-bold uppercase font-cinzel">¡Optime!</span><br><br>${e}` : `❌ <span class="text-red-400 font-bold uppercase font-cinzel">Erratum.</span><br><br>${e}`; 
+        }
+
+        // ==========================================
+        // OÑEHA'Ã HA OGUATA HAG̃UA (Escape Room Logic)
+        // ==========================================
+        function startGame() {
+            const nameInput = document.getElementById('teamName').value.trim();
+            if (!nameInput) {
+                document.getElementById('name-error').classList.remove('hidden');
+                const inputField = document.getElementById('teamName');
+                inputField.classList.add('border-red-500');
+                setTimeout(() => inputField.classList.remove('border-red-500'), 1000);
+                return;
+            }
+            
+            teamName = nameInput;
+            mistakes = 0;
+            
+            localStorage.setItem('vesubio_status', 'playing');
+            localStorage.setItem('vesubio_team', teamName);
+            localStorage.setItem('vesubio_mistakes', '0');
+            localStorage.setItem('vesubio_endTime', (Date.now() + timeRemaining * 1000).toString());
+            
+            resumeGame();
+        }
+
+        function resumeGame() {
+            hide('introStage'); show('gameHeader'); show('gameStage');
+            document.getElementById('timerDisplay').innerText = formatTime(timeRemaining);
+            
+            timerInterval = setInterval(() => {
+                if (localStorage.getItem('vesubio_status') !== 'playing') return;
+                timeRemaining--;
+                document.getElementById('timerDisplay').innerText = formatTime(timeRemaining);
+                if (timeRemaining <= 0) { clearInterval(timerInterval); gameOver(); }
+            }, 1000);
+        }
+
+        function gameOver() {
+            if (localStorage.getItem('vesubio_status') === 'won') return;
+            localStorage.setItem('vesubio_status', 'lost');
+            if (timerInterval) clearInterval(timerInterval);
+
+            const formUrl = 'https://formsubmit.co/ajax/alejandroruizgueto@hotmail.es';
+            fetch(formUrl, {
+                method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({
+                    _subject: "💀 Escape Room FALLIDO: " + teamName + " (Vesubio)",
+                    Investigadores: teamName, Resultado: "Derrota (Tiempo Agotado)", Errores_Cometidos: mistakes, _template: "table"
+                })
+            }).then(() => { document.getElementById('defeatStatusText').innerText = "Roma ha sido informada de vuestra caída."; })
+              .catch(err => { document.getElementById('defeatStatusText').innerText = "Error de conexión informando a Roma."; });
+
+            hide('gameStage'); hide('gameHeader'); hide('introStage'); show('defeatStage');
+        }
+
+        function victory() {
+            if (timerInterval) clearInterval(timerInterval);
+            localStorage.setItem('vesubio_status', 'won');
+            
+            const secondsUsed = (45 * 60) - timeRemaining;
+            let finalScore = BASE_SCORE - secondsUsed - (mistakes * 50);
+            if (finalScore < 0) finalScore = 0; 
+
+            const timeStr = formatTime(timeRemaining);
+
+            document.getElementById('finalTeamName').innerText = teamName;
+            document.getElementById('finalTime').innerText = timeStr;
+            document.getElementById('finalMistakes').innerText = mistakes;
+            document.getElementById('finalScore').innerText = finalScore + " pts";
+            
+            localStorage.setItem('vesubio_timeStr', timeStr);
+            localStorage.setItem('vesubio_mistakes', mistakes.toString());
+            localStorage.setItem('vesubio_score', finalScore + " pts");
+
+            hide('gameStage'); hide('gameHeader'); show('victoryStage');
+
+            const formUrl = 'https://formsubmit.co/ajax/alejandroruizgueto@hotmail.es';
+            fetch(formUrl, {
+                method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({
+                    _subject: "⛵ Escape Room SUPERADO: " + teamName + " (Vesubio)",
+                    Investigadores: teamName, Resultado: "Victoria", Tiempo_Sobrante: timeStr, Errores_Cometidos: mistakes, Puntuacion_Final: finalScore, _template: "table"
+                })
+            }).then(response => response.json())
+              .then(data => {
+                document.getElementById('statusDot').classList.replace('bg-yellow-500', 'bg-emerald-500');
+                document.getElementById('statusDot').classList.remove('animate-pulse');
+                document.getElementById('statusText').innerText = "Enviado por paloma mensajera a Roma";
+                document.getElementById('statusText').classList.replace('text-slate-400', 'text-emerald-400');
+            }).catch(err => {
+                document.getElementById('statusDot').classList.replace('bg-yellow-500', 'bg-red-500');
+                document.getElementById('statusText').innerText = "Error enviando a Roma";
+                document.getElementById('statusText').classList.replace('text-slate-400', 'text-red-400');
+            });
+        }
+
+        function normalizeString(str) { return str.toLowerCase().trim().replace(/[.,;:!?"]/g, ''); }
+
+        function checkPrueba1() {
+            const q1 = normalizeString(document.getElementById('p1-q1').value);
+            const q2 = normalizeString(document.getElementById('p1-q2').value);
+            const q3 = normalizeString(document.getElementById('p1-q3').value);
+
+            const isQ1Correct = q1 === 'audet';
+            const isQ2Correct = q2 === 'manibus';
+            const isQ3Correct = q3 === 'ostendens';
+
+            if (isQ1Correct && isQ2Correct && isQ3Correct) {
+                document.getElementById('p1-error').classList.add('hidden');
+                const btn = document.querySelector('#prueba1 button');
+                btn.innerText = "¡Faro I Encendido!";
+                btn.classList.replace('bg-orange-700', 'bg-emerald-700');
+                btn.classList.replace('hover:bg-orange-600', 'hover:bg-emerald-600');
+                btn.disabled = true;
+
+                const p2 = document.getElementById('prueba2');
+                p2.classList.remove('opacity-50', 'pointer-events-none');
+                p2.classList.add('ring-2', 'ring-yellow-500', 'shadow-[0_0_20px_rgba(234,179,8,0.3)]');
+                document.getElementById('prueba1').classList.remove('ring-2', 'ring-orange-500');
+                document.getElementById('prueba1').classList.add('opacity-80');
+            } else {
+                mistakes++; localStorage.setItem('vesubio_mistakes', mistakes.toString());
+                document.getElementById('p1-error').classList.remove('hidden');
+                const panel = document.getElementById('prueba1');
+                panel.classList.add('border-red-500');
+                setTimeout(() => panel.classList.remove('border-red-500'), 1000);
+            }
+        }
+
+        function checkPrueba2() {
+            const q1 = document.querySelector('input[name="t1"]:checked')?.value;
+            const q2 = document.querySelector('input[name="t2"]:checked')?.value;
+            const q3 = document.querySelector('input[name="t3"]:checked')?.value;
+            const translationText = document.getElementById('fullTranslation').value.trim();
+
+            if (q1 === 'a' && q2 === 'b' && q3 === 'a' && translationText.length > 30) {
+                document.getElementById('p2-error').classList.add('hidden');
+                const btn = document.querySelector('#prueba2 button');
+                btn.innerText = "¡Faro II Encendido!";
+                btn.disabled = true;
+
+                const p3 = document.getElementById('prueba3');
+                p3.classList.remove('opacity-50', 'pointer-events-none');
+                p3.classList.add('ring-2', 'ring-red-500', 'shadow-[0_0_20px_rgba(239,68,68,0.3)]');
+                document.getElementById('prueba2').classList.remove('ring-2', 'ring-yellow-500');
+                document.getElementById('prueba2').classList.add('opacity-80');
+            } else {
+                mistakes++; localStorage.setItem('vesubio_mistakes', mistakes.toString());
+                document.getElementById('p2-error').classList.remove('hidden');
+                const panel = document.getElementById('prueba2');
+                panel.classList.add('border-red-500');
+                setTimeout(() => panel.classList.remove('border-red-500'), 1000);
+            }
+        }
+
+        function checkPrueba3() {
+            const l1 = parseInt(document.getElementById('lock1').value, 10);
+            const l2 = parseInt(document.getElementById('lock2').value, 10);
+            const l3 = parseInt(document.getElementById('lock3').value, 10);
+            const l4 = parseInt(document.getElementById('lock4').value, 10);
+            const l5 = parseInt(document.getElementById('lock5').value, 10);
+
+            // Código: 5 (dies 5ª decl), 1 (properat 1ª conj), 6 (lapidibus ablativo), 3 (3 abl absolutos), 3 (Epístola)
+            if (l1 === 5 && l2 === 1 && l3 === 6 && l4 === 3 && l5 === 3) {
+                victory();
+            } else {
+                mistakes++; localStorage.setItem('vesubio_mistakes', mistakes.toString());
+                document.getElementById('p3-error').classList.remove('hidden');
+                const inputs = document.querySelectorAll('.candado-input');
+                inputs.forEach(i => {
+                    i.classList.add('border-red-500', 'text-red-500');
+                    setTimeout(() => i.classList.remove('border-red-500', 'text-red-500'), 1000);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
