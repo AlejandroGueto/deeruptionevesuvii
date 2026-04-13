@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eruptio Vesuvii - Escape Room Latino</title>
+    <title>Eruptio Vesuvii - Escape Room Latino PRO</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Ta'anga'i (Lucide Icons) -->
@@ -15,17 +15,13 @@
             font-family: 'Merriweather', serif;
             background-color: #1a1a1a; 
             color: #e2e8f0; 
-            /* Gradiente oscuro volcánico */
             background-image: radial-gradient(circle at center, #2d1313 0%, #0a0a0a 100%);
             min-height: 100vh;
             overflow-x: hidden;
         }
-        h1, h2, h3, .font-cinzel {
-            font-family: 'Cinzel', serif;
-        }
+        h1, h2, h3, .font-cinzel { font-family: 'Cinzel', serif; }
         .greek-display { font-family: 'Playfair Display', serif; }
         
-        /* Kuatia yma (Pergamino) */
         .pergamino {
             background-color: #f4e8d1;
             color: #332b22;
@@ -48,10 +44,19 @@
         }
         .input-latino:focus { border-bottom-color: #f97316; }
         
+        .select-latino {
+            background: #2a0a0a;
+            border: 1px solid #7f1d1d;
+            color: #f8fafc;
+            font-family: 'Cinzel', serif;
+            outline: none;
+        }
+        .select-latino:focus { border-color: #f97316; }
+
         .candado-input {
-            width: 3rem;
-            height: 4rem;
-            font-size: 1.5rem;
+            width: 2.5rem;
+            height: 3.5rem;
+            font-size: 1.2rem;
             text-align: center;
             background: #2a0a0a;
             border: 2px solid #7f1d1d;
@@ -59,11 +64,10 @@
             color: #f97316;
             font-family: 'Cinzel', serif;
         }
-        .candado-input:focus {
-            border-color: #f97316;
-            outline: none;
-            box-shadow: 0 0 10px rgba(249, 115, 22, 0.5);
+        @media (min-width: 768px) {
+            .candado-input { width: 3rem; height: 4rem; font-size: 1.5rem; }
         }
+        .candado-input:focus { border-color: #f97316; outline: none; box-shadow: 0 0 10px rgba(249, 115, 22, 0.5); }
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
@@ -73,20 +77,18 @@
         .drawer { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 200; }
         .lang-tag { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 900; text-transform: uppercase; margin-right: 8px; display: inline-block; }
         
-        /* Modal UI Custom */
         .custom-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s; backdrop-filter: blur(4px); }
         .custom-modal.active { opacity: 1; pointer-events: auto; }
     </style>
 </head>
 <body class="flex flex-col items-center p-4 md:p-8 relative">
 
-    <!-- Custom Prompt Modal for API Key -->
     <div id="apiModal" class="custom-modal">
         <div class="bg-slate-900 border border-orange-900 p-8 rounded-lg shadow-2xl max-w-md w-full text-center">
             <h3 class="font-cinzel text-xl text-orange-500 mb-4 flex items-center justify-center gap-2">
                 <i data-lucide="key"></i> Configurar Clavis (Oráculo)
             </h3>
-            <p class="text-sm text-slate-400 mb-4">Introduce tu API Key de Groq para habilitar el diccionario avanzado y los retos generativos.</p>
+            <p class="text-sm text-slate-400 mb-4">Introduce tu API Key de Groq para habilitar retos generativos (el diccionario funciona sin ella).</p>
             <input type="text" id="apiKeyInput" class="w-full bg-black/50 border border-orange-900/50 text-white p-3 rounded mb-4 focus:border-orange-500 outline-none text-center" placeholder="gsk_...">
             <div class="flex gap-4 justify-center">
                 <button onclick="closeApiModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded font-cinzel text-sm uppercase transition">Cancelar</button>
@@ -96,7 +98,6 @@
         </div>
     </div>
 
-    <!-- Akã ha Ára ra'ãha -->
     <header class="w-full max-w-5xl flex justify-between items-center border-b border-orange-900/50 pb-4 mb-8 hidden-stage" id="gameHeader">
         <div class="text-xl md:text-2xl font-cinzel text-orange-500 tracking-widest flex items-center gap-2">
             <i data-lucide="ship" class="w-6 h-6"></i> Classis Misenensis
@@ -107,31 +108,26 @@
         </div>
     </header>
 
-    <!-- ÑEPYRŨHA (Intro) -->
     <div id="introStage" class="w-full max-w-3xl flex flex-col items-center text-center mt-6 md:mt-12 space-y-8">
         <h1 class="text-5xl md:text-6xl text-orange-500 tracking-widest uppercase text-shadow-sm flex flex-col items-center">
             Eruptio<br><span class="text-4xl md:text-5xl text-slate-300 mt-2">Vesuvii</span>
         </h1>
         
         <div class="bg-black/60 p-8 rounded-lg border border-orange-900/50 shadow-2xl backdrop-blur-sm w-full max-w-2xl">
-            
-            <!-- Vídeo de Contextualización (Pompeya / Vesubio) -->
             <div class="mb-8 rounded-lg border border-orange-900/50 overflow-hidden shadow-inner bg-black w-full aspect-video relative">
                 <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/dY_3ggKg0Bc?start=15" title="Erupción del Vesubio" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
 
             <p class="text-lg md:text-xl leading-relaxed mb-8 text-slate-300 text-justify">
-                "Miseno, 24 de agosto del 79 d.C. El monte Vesubio acaba de estallar, oscureciendo el cielo. El almirante Plinio el Viejo ha zarpado valientemente para rescatar a los supervivientes en la costa, pero una densa nube de gas tóxico y cenizas amenaza con sepultarlo todo. Plinio el Joven ha redactado un informe crucial. Descifrad sus palabras para activar el faro del puerto y guiar a la flota de regreso. Tenéis 45 minutos antes de que el flujo piroclástico os alcance. Vuestra única salvación: el latín."
+                "Miseno, 24 de agosto del 79 d.C. El monte Vesubio acaba de estallar, oscureciendo el cielo. El almirante Plinio el Viejo ha zarpado valientemente para rescatar a los supervivientes en la costa, pero una densa nube de gas tóxico y cenizas amenaza con sepultarlo todo. Plinio el Joven ha redactado un informe crucial. Descifrad sus palabras para activar el faro del puerto y guiar a la flota de regreso. Tenéis 45 minutos. Vuestra única salvación: el latín."
             </p>
             
-            <!-- Umi oheka va'erã héra (Team Name) -->
             <div class="mb-6 bg-orange-950/30 p-6 rounded border border-orange-900/50">
                 <label for="teamName" class="block text-orange-500 font-cinzel text-lg mb-3">Identificación de los Escribas:</label>
                 <input type="text" id="teamName" class="w-full bg-black/50 border-2 border-orange-900 text-white p-3 rounded font-cinzel focus:border-orange-500 focus:outline-none transition text-center text-lg shadow-inner" placeholder="Escribid vuestros nombres (Ej: Lucía, Marcos y Elena)" autocomplete="off">
                 <p id="name-error" class="text-red-400 text-sm mt-3 hidden font-bold">⚠️ Debéis identificaros antes de acceder al papiro.</p>
             </div>
 
-            <!-- Ñemongeta API (Groq) -->
             <div class="mb-8 bg-orange-950/30 p-6 rounded border border-orange-900/50 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="text-left">
                     <p class="text-orange-500 font-cinzel text-md mb-1 flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> El Oráculo de Apolo</p>
@@ -146,10 +142,8 @@
         </div>
     </div>
 
-    <!-- ÑEMBOSARÁI (Game Stage) -->
     <div id="gameStage" class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-5 gap-8 hidden-stage">
         
-        <!-- Oga yke asu: Kuatia ha Porandu Guasu -->
         <div class="lg:col-span-2 flex flex-col h-full gap-6">
             <div class="pergamino p-6 md:p-8 rounded-lg relative">
                 <div class="absolute top-4 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-amber-900/20 rounded-full"></div>
@@ -157,35 +151,32 @@
                     Epistula ad Tacitum
                 </h2>
                 <div id="latin-container" class="text-lg leading-loose text-justify font-medium">
-                    <!-- JS omoingéta ko'ápe umi ñe'ẽ -->
+                    <!-- Text injected by JS -->
                 </div>
                 <div class="mt-8 pt-4 border-t border-amber-900/20 text-sm italic text-amber-900/70">
-                    <p class="mb-2 font-bold flex items-center gap-2"><i data-lucide="info" class="w-4 h-4"></i> Haz clic en cualquier palabra para consultar el Oráculo.</p>
-                    <p>Las palabras subrayadas por la ceniza guardan secretos sintácticos vitales.</p>
+                    <p class="mb-2 font-bold flex items-center gap-2"><i data-lucide="info" class="w-4 h-4"></i> Haz clic en cualquier palabra para consultar su morfología.</p>
                 </div>
             </div>
 
-            <!-- Porandu Guasu (Reto Magistral) -->
             <div class="bg-black/60 border border-orange-900/50 p-6 rounded-lg shadow-lg relative overflow-hidden">
                 <h3 class="text-xl text-orange-500 mb-4 flex items-center gap-2 font-cinzel">
                     <i data-lucide="flame" class="w-5 h-5"></i> Reto Magistral
                 </h3>
-                <p class="text-sm text-slate-300 mb-4">¿Necesitáis repasar antes de enfrentaros a las pruebas? El Oráculo puede generar un reto aleatorio de comprensión.</p>
+                <p class="text-sm text-slate-300 mb-4">Genera un reto de comprensión automático usando el poder de la IA (Requiere Clavis).</p>
                 <button onclick="generateExercise()" class="w-full py-3 bg-orange-900 hover:bg-orange-800 text-white rounded font-cinzel text-sm uppercase tracking-widest transition-all shadow">Generar Reto</button>
                 <div id="exercise-area" class="hidden mt-6 pt-6 border-t border-orange-900/50"></div>
             </div>
         </div>
 
-        <!-- Oga yke akatúa: Umi Ñeha'ã -->
         <div class="lg:col-span-3 flex flex-col space-y-6">
             
-            <!-- ÑEHA'Ã 1 -->
+            <!-- PRUEBA 1 -->
             <div id="prueba1" class="bg-black/60 border border-orange-900/50 p-6 rounded-lg shadow-lg relative overflow-hidden transition-all duration-500">
                 <div class="absolute top-0 left-0 w-1 h-full bg-orange-500"></div>
                 <h3 class="text-2xl text-orange-500 mb-4 flex items-center gap-2 font-cinzel">
                     <span class="bg-orange-900/50 p-2 rounded text-orange-300 border border-orange-700 text-sm">I</span> Las Cenizas de la Sintaxis
                 </h3>
-                <p class="mb-6 text-slate-300">Para encender el primer fuego del faro, identificad estas tres estructuras en la narración de Plinio. Escribid la <span class="font-bold text-orange-400">palabra exacta</span> en latín.</p>
+                <p class="mb-6 text-slate-300">Identificad estas tres estructuras en la narración de Plinio. Escribid la <span class="font-bold text-orange-400">palabra exacta</span> en latín tal y como aparece en el texto.</p>
                 
                 <div class="space-y-4">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
@@ -193,11 +184,11 @@
                         <input type="text" id="p1-q1" class="input-latino w-full md:w-1/3" autocomplete="off" spellcheck="false" placeholder="verbo">
                     </div>
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
-                        <label class="text-sm font-bold text-slate-400 w-full md:w-2/3">2. Sustantivo de la 4ª declinación usado en ablativo plural para protegerse:</label>
+                        <label class="text-sm font-bold text-slate-400 w-full md:w-2/3">2. Sustantivo de la 4ª declinación usado en ablativo plural para protegerse de las piedras:</label>
                         <input type="text" id="p1-q2" class="input-latino w-full md:w-1/3" autocomplete="off" spellcheck="false" placeholder="sustantivo">
                     </div>
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
-                        <label class="text-sm font-bold text-slate-400 w-full md:w-2/3">3. Participio de presente activo (nominativo singular) que denota que no muestra miedo:</label>
+                        <label class="text-sm font-bold text-slate-400 w-full md:w-2/3">3. Participio de presente activo (nom. sing.) que denota que Plinio no muestra miedo:</label>
                         <input type="text" id="p1-q3" class="input-latino w-full md:w-1/3" autocomplete="off" spellcheck="false" placeholder="participio">
                     </div>
                 </div>
@@ -207,13 +198,13 @@
                 <p id="p1-error" class="text-red-400 text-sm mt-3 hidden text-right">La ceniza bloquea la luz (-50 pts). Revisa la ortografía.</p>
             </div>
 
-            <!-- ÑEHA'Ã 2 -->
+            <!-- PRUEBA 2 -->
             <div id="prueba2" class="bg-black/60 border border-orange-900/50 p-6 rounded-lg shadow-lg relative overflow-hidden transition-all duration-500 opacity-50 pointer-events-none">
                 <div class="absolute top-0 left-0 w-1 h-full bg-yellow-500"></div>
                 <h3 class="text-2xl text-yellow-500 mb-4 flex items-center gap-2 font-cinzel">
                     <span class="bg-yellow-900/50 p-2 rounded text-yellow-300 border border-yellow-700 text-sm">II</span> El Relato del Superviviente
                 </h3>
-                <p class="mb-6 text-slate-300">Debéis interpretar correctamente los momentos más dramáticos del papiro para comprender la magnitud de la tragedia.</p>
+                <p class="mb-6 text-slate-300">Interpretad los momentos dramáticos del papiro para comprender la magnitud de la tragedia.</p>
                 
                 <div class="space-y-6">
                     <div class="bg-orange-950/20 p-4 rounded border border-orange-900/40">
@@ -226,10 +217,6 @@
                             <label class="flex items-center gap-3 cursor-pointer group">
                                 <input type="radio" name="t1" value="b" class="w-4 h-4 text-yellow-500 bg-slate-800 border-slate-600">
                                 <span class="group-hover:text-yellow-300 transition text-sm">b) Aquel vio una cosa asombrosa y preparó una nave.</span>
-                            </label>
-                            <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="radio" name="t1" value="c" class="w-4 h-4 text-yellow-500 bg-slate-800 border-slate-600">
-                                <span class="group-hover:text-yellow-300 transition text-sm">c) Para ver la asombrosa situación, mandó zarpar la nave.</span>
                             </label>
                         </div>
                     </div>
@@ -244,87 +231,115 @@
                                 <input type="radio" name="t2" value="b" class="w-4 h-4 text-yellow-500 bg-slate-800 border-slate-600">
                                 <span class="group-hover:text-yellow-300 transition text-sm">b) Una pesada ceniza ya caía.</span>
                             </label>
-                            <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="radio" name="t2" value="c" class="w-4 h-4 text-yellow-500 bg-slate-800 border-slate-600">
-                                <span class="group-hover:text-yellow-300 transition text-sm">c) Los incidentes graves estaban llenos de ceniza.</span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="bg-orange-950/20 p-4 rounded border border-orange-900/40">
-                        <p class="font-cinzel text-orange-200 mb-3 text-lg italic">"Cervicalia manibus capitibusque imponunt, ne lapidibus vulnerentur."</p>
-                        <div class="space-y-2">
-                            <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="radio" name="t3" value="a" class="w-4 h-4 text-yellow-500 bg-slate-800 border-slate-600">
-                                <span class="group-hover:text-yellow-300 transition text-sm">a) Se colocan almohadas en las cabezas con las manos, para no ser heridos por las piedras.</span>
-                            </label>
-                            <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="radio" name="t3" value="b" class="w-4 h-4 text-yellow-500 bg-slate-800 border-slate-600">
-                                <span class="group-hover:text-yellow-300 transition text-sm">b) Las cabezas y las manos imponen que las almohadas y piedras no les hagan daño.</span>
-                            </label>
-                            <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="radio" name="t3" value="c" class="w-4 h-4 text-yellow-500 bg-slate-800 border-slate-600">
-                                <span class="group-hover:text-yellow-300 transition text-sm">c) No son vulnerados por las piedras gracias a las manos y almohadas en sus cabezas.</span>
-                            </label>
                         </div>
                     </div>
                     
-                    <!-- Kuatia Ñembohasa Paite -->
                     <div class="bg-orange-950/20 p-4 rounded border border-orange-900/40 mt-4">
                         <label for="fullTranslation" class="font-cinzel text-yellow-400 mb-3 text-lg block flex items-center gap-2">
-                            <i data-lucide="feather" class="w-5 h-5"></i>
-                            Reconstrucción del Documento
+                            <i data-lucide="feather" class="w-5 h-5"></i> Reconstrucción
                         </label>
-                        <p class="text-sm text-slate-400 mb-3">Redactad aquí la versión final en español de todo el texto para los anales de la historia.</p>
-                        <textarea id="fullTranslation" class="w-full h-32 p-4 bg-black/50 border border-yellow-900/50 text-slate-200 rounded focus:border-yellow-500 focus:outline-none transition font-serif" placeholder="A la hora séptima, mi madre indica a mi tío..."></textarea>
+                        <p class="text-sm text-slate-400 mb-3">Redactad la versión final del texto en español.</p>
+                        <textarea id="fullTranslation" class="w-full h-24 p-4 bg-black/50 border border-yellow-900/50 text-slate-200 rounded focus:border-yellow-500 focus:outline-none transition font-serif" placeholder="A la hora séptima, mi madre indica a mi tío..."></textarea>
                     </div>
                 </div>
                 <div class="mt-6 text-right">
                     <button onclick="checkPrueba2()" class="px-6 py-2 bg-yellow-700 hover:bg-yellow-600 text-white font-bold font-cinzel rounded transition uppercase tracking-widest">Activar Faro II</button>
                 </div>
-                <p id="p2-error" class="text-red-400 text-sm mt-3 hidden text-right">La traducción es imprecisa (-50 pts). Revisa las opciones y asegura que has rellenado el texto libre.</p>
+                <p id="p2-error" class="text-red-400 text-sm mt-3 hidden text-right">La traducción es imprecisa (-50 pts).</p>
             </div>
 
-            <!-- ÑEHA'Ã 3 -->
+            <!-- PRUEBA 3 (CULTURA Y MITOLOGÍA) -->
             <div id="prueba3" class="bg-black/60 border border-orange-900/50 p-6 rounded-lg shadow-lg relative overflow-hidden transition-all duration-500 opacity-50 pointer-events-none">
+                <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+                <h3 class="text-2xl text-emerald-500 mb-4 flex items-center gap-2 font-cinzel">
+                    <span class="bg-emerald-900/50 p-2 rounded text-emerald-300 border border-emerald-700 text-sm">III</span> Los Ecos de Miseno
+                </h3>
+                <p class="mb-6 text-slate-300">Demostrad vuestro conocimiento sobre la cultura y mitología que rodea a esta catástrofe histórica.</p>
+                
+                <div class="space-y-4">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-bold text-slate-400">1. ¿A qué dios de la fragua y el fuego subterráneo asociaban los romanos el poder destructivo de los volcanes?</label>
+                        <select id="p3-q1" class="select-latino p-2 rounded w-full md:w-1/2">
+                            <option value="">Selecciona una respuesta...</option>
+                            <option value="pluton">Plutón</option>
+                            <option value="marte">Marte</option>
+                            <option value="vulcano">Vulcano</option>
+                            <option value="jupitero">Júpiter</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-bold text-slate-400">2. ¿Qué importantes ciudades quedaron sepultadas bajo esta famosa erupción del año 79 d.C.?</label>
+                        <select id="p3-q2" class="select-latino p-2 rounded w-full md:w-1/2">
+                            <option value="">Selecciona una respuesta...</option>
+                            <option value="roma">Roma y Ostia</option>
+                            <option value="pompeya">Pompeya y Herculano</option>
+                            <option value="siracusa">Siracusa y Cartago</option>
+                            <option value="napoles">Nápoles y Capua</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-bold text-slate-400">3. ¿Cuál era el cargo militar exacto de Plinio el Viejo cuando zarpó a ayudar a los afectados?</label>
+                        <select id="p3-q3" class="select-latino p-2 rounded w-full md:w-1/2">
+                            <option value="">Selecciona una respuesta...</option>
+                            <option value="consul">Cónsul de Roma</option>
+                            <option value="prefecto">Prefecto (Almirante) de la flota</option>
+                            <option value="legado">Legado de la Legión X</option>
+                            <option value="tribuno">Tribuno de la plebe</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-6 text-right">
+                    <button onclick="checkPrueba3()" class="px-6 py-2 bg-emerald-700 hover:bg-emerald-600 text-white font-bold font-cinzel rounded transition uppercase tracking-widest">Activar Faro III</button>
+                </div>
+                <p id="p3-error" class="text-red-400 text-sm mt-3 hidden text-right">Los dioses te dan la espalda (-50 pts). Revisa tus conocimientos.</p>
+            </div>
+
+            <!-- PRUEBA 4 (CÓDIGO FINAL) -->
+            <div id="prueba4" class="bg-black/60 border border-orange-900/50 p-6 rounded-lg shadow-lg relative overflow-hidden transition-all duration-500 opacity-50 pointer-events-none">
                 <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
                 <h3 class="text-2xl text-red-500 mb-4 flex items-center gap-2 font-cinzel">
-                    <span class="bg-red-900/50 p-2 rounded text-red-300 border border-red-700 text-sm">III</span> El Código de la Flota
+                    <span class="bg-red-900/50 p-2 rounded text-red-300 border border-red-700 text-sm">IV</span> El Código de la Flota
                 </h3>
-                <p class="mb-6 text-slate-300">Los barcos esperan vuestra señal de luces. Aportad los <span class="text-red-400 font-bold">cinco dígitos</span> extraídos de la gramática y el contexto literario de esta epístola.</p>
+                <p class="mb-6 text-slate-300">Los barcos esperan vuestra señal final. Aportad los <span class="text-red-400 font-bold">seis dígitos</span> extraídos de la gramática y el contexto.</p>
                 
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
+                <div class="grid grid-cols-3 md:grid-cols-6 gap-2 mb-8">
                     <!-- Lock 1 -->
-                    <div class="bg-red-950/20 p-3 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
-                        <p class="text-[10px] md:text-xs text-slate-400 mb-3">Nº de declinación a la que pertenece la última palabra del texto ("<strong>dies</strong>").</p>
+                    <div class="bg-red-950/20 p-2 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
+                        <p class="text-[9px] md:text-xs text-slate-400 mb-2">Declinación de la palabra "<strong>dies</strong>".</p>
                         <input type="number" id="lock1" min="1" max="5" class="candado-input mt-auto">
                     </div>
                     <!-- Lock 2 -->
-                    <div class="bg-red-950/20 p-3 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
-                        <p class="text-[10px] md:text-xs text-slate-400 mb-3">Nº de conjugación del verbo "<strong>properat</strong>" (se apresura).</p>
+                    <div class="bg-red-950/20 p-2 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
+                        <p class="text-[9px] md:text-xs text-slate-400 mb-2">Conjugación del verbo "<strong>properat</strong>".</p>
                         <input type="number" id="lock2" min="1" max="4" class="candado-input mt-auto">
                     </div>
                     <!-- Lock 3 -->
-                    <div class="bg-red-950/20 p-3 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
-                        <p class="text-[10px] md:text-xs text-slate-400 mb-3">Orden tradicional (1 a 6) del caso que tiene la palabra "<strong>lapidibus</strong>".</p>
+                    <div class="bg-red-950/20 p-2 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
+                        <p class="text-[9px] md:text-xs text-slate-400 mb-2">Orden tradicional (1 al 6) del caso de "<strong>lapidibus</strong>".</p>
                         <input type="number" id="lock3" min="1" max="6" class="candado-input mt-auto">
                     </div>
                     <!-- Lock 4 -->
-                    <div class="bg-red-950/20 p-3 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
-                        <p class="text-[10px] md:text-xs text-slate-400 mb-3">Número exacto de <strong>Ablativos Absolutos</strong> en este texto.</p>
+                    <div class="bg-red-950/20 p-2 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
+                        <p class="text-[9px] md:text-xs text-slate-400 mb-2">Cantidad de <strong>Ablativos Absolutos</strong> en el texto.</p>
                         <input type="number" id="lock4" min="0" max="9" class="candado-input mt-auto">
                     </div>
                     <!-- Lock 5 -->
-                    <div class="bg-red-950/20 p-3 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
-                        <p class="text-[10px] md:text-xs text-slate-400 mb-3">Subgénero en prosa (1:Épica, 2:Teatro, 3:Epístola, 4:Oratoria).</p>
+                    <div class="bg-red-950/20 p-2 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
+                        <p class="text-[9px] md:text-xs text-slate-400 mb-2">Subgénero literario (1:Épica, 2:Teatro, 3:Epístola).</p>
                         <input type="number" id="lock5" min="1" max="4" class="candado-input mt-auto">
+                    </div>
+                    <!-- Lock 6 -->
+                    <div class="bg-red-950/20 p-2 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
+                        <p class="text-[9px] md:text-xs text-slate-400 mb-2">Número de letras del dios del fuego romano.</p>
+                        <input type="number" id="lock6" min="1" max="9" class="candado-input mt-auto">
                     </div>
                 </div>
 
                 <div class="mt-4 text-center w-full">
-                    <button onclick="checkPrueba3()" class="w-full py-4 bg-gradient-to-r from-red-900 to-red-700 hover:from-red-800 hover:to-red-600 text-white font-cinzel font-bold text-xl rounded transition shadow-[0_0_20px_rgba(153,27,27,0.6)] border border-red-500/50 uppercase tracking-widest">
+                    <button onclick="checkPrueba4()" class="w-full py-4 bg-gradient-to-r from-red-900 to-red-700 hover:from-red-800 hover:to-red-600 text-white font-cinzel font-bold text-xl rounded transition shadow-[0_0_20px_rgba(153,27,27,0.6)] border border-red-500/50 uppercase tracking-widest">
                         ILUMINAR EL PUERTO
                     </button>
-                    <p id="p3-error" class="text-red-400 text-sm mt-3 hidden">El faro no se enciende (-50 pts). La combinación es incorrecta.</p>
+                    <p id="p4-error" class="text-red-400 text-sm mt-3 hidden">El faro no se enciende (-50 pts). La combinación es incorrecta.</p>
                 </div>
             </div>
 
@@ -336,20 +351,13 @@
         <h1 class="text-5xl md:text-6xl font-cinzel text-yellow-500 text-shadow-sm mb-2">¡Flota a Salvo!</h1>
         <div class="text-8xl mb-2">⛵🌅</div>
         <p class="text-xl md:text-2xl text-slate-300 leading-relaxed max-w-2xl mb-4">
-            Vuestro profundo conocimiento del latín ha descifrado el papiro a tiempo. El faro de Miseno brilla en la oscuridad de la ceniza, guiando a los barcos de vuelta a puerto.
+            Vuestro profundo conocimiento del latín ha descifrado el papiro a tiempo. El faro de Miseno brilla, guiando a los barcos de vuelta a puerto.
         </p>
         
-        <p class="mt-4 text-orange-400 font-cinzel font-bold text-xl uppercase tracking-widest bg-orange-950/50 p-4 rounded-lg border border-orange-900">Tu resultado ha sido registrado en los anales y no puede modificarse.</p>
+        <p class="mt-4 text-orange-400 font-cinzel font-bold text-xl uppercase tracking-widest bg-orange-950/50 p-4 rounded-lg border border-orange-900">Tu resultado ha sido registrado en los anales.</p>
 
-        <!-- Senado Kuatia -->
         <div class="bg-black/80 p-6 md:p-8 rounded-lg border border-yellow-500/50 mt-4 w-full max-w-xl shadow-[0_0_30px_rgba(234,179,8,0.2)] relative">
-            <div id="formStatus" class="absolute top-2 right-2 flex items-center gap-1 bg-slate-900 px-3 py-1 rounded-full border border-slate-700">
-                <div class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" id="statusDot"></div>
-                <span class="text-[10px] text-slate-400 uppercase tracking-widest" id="statusText">Enviando mensaje imperial...</span>
-            </div>
-
             <h3 class="text-2xl font-cinzel text-yellow-500 mb-4 border-b border-yellow-500/30 pb-3 uppercase tracking-widest mt-4">Acta de Supervivencia</h3>
-            
             <p class="text-slate-300 mb-6 text-lg">Escribas Heroicos: <span id="finalTeamName" class="text-yellow-400 font-bold font-cinzel text-xl ml-2"></span></p>
             
             <div class="grid grid-cols-2 gap-4 my-6 bg-orange-950/30 p-4 rounded border border-orange-900/50 shadow-inner">
@@ -375,60 +383,180 @@
         <h1 class="text-5xl md:text-6xl font-cinzel text-red-600 text-shadow-sm mb-4">Sepultados por la Ceniza</h1>
         <div class="text-8xl mb-4">🌋</div>
         <p class="text-xl md:text-2xl text-slate-300 leading-relaxed max-w-2xl">
-            El flujo piroclástico ha alcanzado Miseno. Sin la luz del faro, las naves se han estrellado contra la costa. La historia de Plinio, y la vuestra, terminan aquí.
+            El flujo piroclástico ha alcanzado Miseno. Sin la luz del faro, las naves se han estrellado. La historia termina aquí.
         </p>
-        <p class="mt-8 text-red-500 font-cinzel font-bold text-xl uppercase tracking-widest bg-red-950/50 p-4 rounded-lg border border-red-900">La furia del volcán no concede segundas oportunidades.</p>
-        <p class="text-slate-400 mt-2 text-sm italic" id="defeatStatusText">Notificando la tragedia a Roma...</p>
     </div>
 
     <!-- Oikuaapáva (Oracle Drawer) -->
     <div id="oracle-drawer" class="fixed inset-y-0 right-0 w-full md:w-[650px] bg-slate-900 shadow-2xl translate-x-full drawer p-8 md:p-12 overflow-y-auto border-l border-orange-900 no-print text-slate-200">
-        <button onclick="closeOracle()" class="mb-12 text-slate-400 hover:text-orange-500 flex items-center gap-4 font-cinzel text-sm uppercase transition-all tracking-widest font-black">
+        <button onclick="closeOracle()" class="mb-8 text-slate-400 hover:text-orange-500 flex items-center gap-4 font-cinzel text-sm uppercase transition-all tracking-widest font-black">
             <i data-lucide="arrow-right" class="w-4 h-4"></i> Regresar
         </button>
         <div id="oracle-content"></div>
     </div>
 
-    <!-- JS Rembiapo -->
     <script>
-        // Variables de estado
-        let timerInterval;
-        let timeRemaining = 45 * 60; 
-        let teamName = "";
-        let mistakes = 0;
-        const BASE_SCORE = 3000; 
+        // Funciones Generadoras de Tablas Gramaticales (Para ahorrar código)
+        function buildNounTable(nomS, vocS, accS, genS, datS, ablS, nomP, vocP, accP, genP, datP, ablP) {
+            return `<table class="w-full text-xs text-left text-slate-300 border-collapse border border-slate-700 mt-4 shadow-lg">
+                <thead class="bg-orange-950/70 text-orange-400">
+                    <tr><th class="border border-slate-700 p-2 text-center" colspan="3"><i data-lucide="book-open" class="inline w-3 h-3 mr-1"></i> Cuadro de Flexión Nominal</th></tr>
+                    <tr><th class="border border-slate-700 p-2">Caso</th><th class="border border-slate-700 p-2">Singular</th><th class="border border-slate-700 p-2">Plural</th></tr>
+                </thead>
+                <tbody class="bg-slate-800/50">
+                    <tr class="hover:bg-slate-700/50 transition"><td class="border border-slate-700 p-2 font-bold text-orange-300">Nominativo</td><td class="border border-slate-700 p-2">${nomS}</td><td class="border border-slate-700 p-2">${nomP}</td></tr>
+                    <tr class="hover:bg-slate-700/50 transition"><td class="border border-slate-700 p-2 font-bold text-orange-300">Vocativo</td><td class="border border-slate-700 p-2">${vocS}</td><td class="border border-slate-700 p-2">${vocP}</td></tr>
+                    <tr class="hover:bg-slate-700/50 transition"><td class="border border-slate-700 p-2 font-bold text-orange-300">Acusativo</td><td class="border border-slate-700 p-2">${accS}</td><td class="border border-slate-700 p-2">${accP}</td></tr>
+                    <tr class="hover:bg-slate-700/50 transition"><td class="border border-slate-700 p-2 font-bold text-orange-300">Genitivo</td><td class="border border-slate-700 p-2">${genS}</td><td class="border border-slate-700 p-2">${genP}</td></tr>
+                    <tr class="hover:bg-slate-700/50 transition"><td class="border border-slate-700 p-2 font-bold text-orange-300">Dativo</td><td class="border border-slate-700 p-2">${datS}</td><td class="border border-slate-700 p-2">${datP}</td></tr>
+                    <tr class="hover:bg-slate-700/50 transition"><td class="border border-slate-700 p-2 font-bold text-orange-300">Ablativo</td><td class="border border-slate-700 p-2">${ablS}</td><td class="border border-slate-700 p-2">${ablP}</td></tr>
+                </tbody>
+            </table>`;
+        }
+
+        function buildVerbTable(p1, p2, p3, p4, p5, p6, title) {
+            return `<table class="w-full text-xs text-left text-slate-300 border-collapse border border-slate-700 mt-4 shadow-lg">
+                <thead class="bg-red-950/70 text-orange-400">
+                    <tr><th colspan="2" class="border border-slate-700 p-2 text-center uppercase tracking-widest"><i data-lucide="swords" class="inline w-3 h-3 mr-1"></i> Conjugación: ${title}</th></tr>
+                </thead>
+                <tbody class="bg-slate-800/50">
+                    <tr class="hover:bg-slate-700/50 transition"><td class="border border-slate-700 p-2 font-bold text-orange-300 w-1/3">1ª Singular</td><td class="border border-slate-700 p-2">${p1}</td></tr>
+                    <tr class="hover:bg-slate-700/50 transition"><td class="border border-slate-700 p-2 font-bold text-orange-300">2ª Singular</td><td class="border border-slate-700 p-2">${p2}</td></tr>
+                    <tr class="hover:bg-slate-700/50 transition"><td class="border border-slate-700 p-2 font-bold text-orange-300">3ª Singular</td><td class="border border-slate-700 p-2">${p3}</td></tr>
+                    <tr class="hover:bg-slate-700/50 transition"><td class="border border-slate-700 p-2 font-bold text-orange-300">1ª Plural</td><td class="border border-slate-700 p-2">${p4}</td></tr>
+                    <tr class="hover:bg-slate-700/50 transition"><td class="border border-slate-700 p-2 font-bold text-orange-300">2ª Plural</td><td class="border border-slate-700 p-2">${p5}</td></tr>
+                    <tr class="hover:bg-slate-700/50 transition"><td class="border border-slate-700 p-2 font-bold text-orange-300">3ª Plural</td><td class="border border-slate-700 p-2">${p6}</td></tr>
+                </tbody>
+            </table>`;
+        }
 
         // Texto de Plinio el Joven (Ep. 6.16)
         const latinText = "Hora septima mater mea avunculo indicat nubem inusitatam apparere. Ille, re mira visa, navem parari iubet ut naturam montis exploret; mox tamen epistulam accipit a Rectina, quae exterrita periculum magnum nuntiabat. Tum avunculus consilium mutat et, ubi periculum intellegit, auxilium ferre audet. Naves statim deducuntur et ille ad litus properat unde alii fugiunt. Cinis gravis iam incidebat, atque gubernator perterritus clamat: \"Fuge, domine!\". Sed Plinius, nullam formidinem ostendens, eum acriter hortatur: \"Fortes fortuna iuvat: flecte cursum ad Pomponianum statim!\". Ibi amicum suum trepidantem invenit, quem complexus consolatur. Nocte flammae ingentes ex monte lucent, sed ille in tanto periculo dormire solet. Postero die, sole prorsus obscurato, viri e domo exeunt. Cervicalia manibus capitibusque imponunt, ne lapidibus vulnerentur. Vento autem flante, spiritus eius a vapore crasso mox clauditur. Vir clarissimus ad terram cadit et prope mare moritur. Post tres dies corpus inventum est integrum, requiescenti similius.";
 
-        // Diccionario Manual Precargado (para palabras esenciales si no hay API)
+        // Mega-Diccionario Manual Precargado con Flexión
         const customDict = {
-            'hora': { enunciado: "hora, -ae, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Ablativo (C. Circunstancial Tiempo)", def: "a la hora", etym: "Del gr. ὥρα" } },
-            'mater': { enunciado: "mater, matris, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Nominativo (Sujeto)", def: "la madre", etym: "PIE *méh₂tēr" } },
-            'avunculo': { enunciado: "avunculus, -i, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Dativo (C. Indirecto)", def: "al tío (materno)", etym: "Diminutivo de avus" } },
-            'nubem': { enunciado: "nubes, nubis, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Acusativo (Sujeto de Or. Infinitivo)", def: "una nube", etym: "PIE *sneydʰ-" } },
-            'inusitatam': { enunciado: "inusitatus, -a, -um", es: { morph: "Adjetivo, Fem, Sing", syntax: "Acusativo (Adyacente)", def: "inusual, no acostumbrada", etym: "De in- + usitatus" } },
-            'apparere': { enunciado: "appareo, -ere", es: { morph: "Verbo, Infinitivo Pres Activo", syntax: "Núcleo del Predicado (Or. Subord.)", def: "aparecer", etym: "De ad- + pareo" } },
-            'ille': { enunciado: "ille, illa, illud", es: { morph: "Pronombre Demostrativo, Masc, Sing", syntax: "Nominativo (Sujeto)", def: "aquel, él (Plinio el Viejo)", etym: "Latín arcaico olle" } },
-            're': { enunciado: "res, rei, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Ablativo (Sujeto de Abl. Absoluto)", def: "la cosa, la situación", etym: "PIE *reH₁ís" } },
-            'mira': { enunciado: "mirus, -a, -um", es: { morph: "Adjetivo, Fem, Sing", syntax: "Ablativo (Adyacente)", def: "maravillosa, asombrosa", etym: "Del verbo mirari" } },
-            'visa': { enunciado: "video, -ere, vidi, visum", es: { morph: "Participio Perfecto Pasivo, Fem, Sing", syntax: "Ablativo (Núcleo de Abl. Absoluto)", def: "vista", etym: "PIE *weyd-" } },
-            'iubet': { enunciado: "iubeo, -ere", es: { morph: "Verbo, 3ª pers. sing, Pres. Ind. Act", syntax: "Núcleo del Predicado", def: "ordena, manda", etym: "PIE *yowdʰ-" } },
-            'audet': { enunciado: "audeo, -ere", es: { morph: "Verbo Semideponente, 3ª sing, Pres. Ind", syntax: "Núcleo del Predicado", def: "se atreve", exp:"Verbo semideponente: forma activa en tiempos de presente, pero forma pasiva con significado activo en tiempos de perfecto (ausus sum).", etym: "De avidus" } },
-            'cinis': { enunciado: "cinis, cineris, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Nominativo (Sujeto)", def: "la ceniza", etym: "PIE *ken-" } },
-            'fuge': { enunciado: "fugio, -ere", es: { morph: "Verbo, 2ª pers. sing, Imperativo Act", syntax: "Núcleo del Predicado", def: "¡huye!", etym: "PIE *bʰewg-" } },
-            'formidinem': { enunciado: "formido, -inis, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Acusativo (C. Directo)", def: "el terror, el miedo", etym: "De formidare" } },
-            'ostendens': { enunciado: "ostendo, -ere", es: { morph: "Participio Presente Activo, Masc, Sing", syntax: "Nominativo (Concertado con Plinius)", def: "mostrando", etym: "De ob- + tendo" } },
-            'hortatur': { enunciado: "hortor, -ari", es: { morph: "Verbo Deponente, 3ª sing, Pres. Ind", syntax: "Núcleo del Predicado", def: "exhorta, anima", exp: "Verbo deponente: forma pasiva pero significado activo.", etym: "PIE *gʰer-" } },
-            'dormire': { enunciado: "dormio, -ire", es: { morph: "Verbo, Infinitivo Presente Act", syntax: "C. Directo / Predicativo", def: "dormir", etym: "PIE *drem-" } },
-            'solet': { enunciado: "soleo, -ere", es: { morph: "Verbo Semideponente, 3ª sing, Pres. Ind", syntax: "Núcleo del Predicado", def: "acostumbra, suele", etym: "Desconocida" } },
-            'sole': { enunciado: "sol, solis, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Ablativo (Sujeto de Abl. Absoluto)", def: "el sol", etym: "PIE *sóh₂wl̥" } },
-            'obscurato': { enunciado: "obscuro, -are", es: { morph: "Participio Perfecto Pasivo, Masc, Sing", syntax: "Ablativo (Núcleo de Abl. Absoluto)", def: "oscurecido", etym: "De obscurus" } },
-            'manibus': { enunciado: "manus, -us, f", es: { morph: "Sustantivo, Fem, Plural", syntax: "Ablativo (C. Circunstancial Instrumento)", def: "con las manos", exp: "Pertenece a la 4ª declinación a pesar de ser femenino.", etym: "PIE *meh₂-r-" } },
-            'capitibusque': { enunciado: "caput, -itis, n + -que", es: { morph: "Sustantivo, Neut, Plural + enclítica", syntax: "Dativo (C. Indirecto / Régimen)", def: "y en las cabezas", etym: "PIE *kap-" } },
-            'lapidibus': { enunciado: "lapis, -idis, m", es: { morph: "Sustantivo, Masc, Plural", syntax: "Ablativo (C. Agente / Causa)", def: "por las piedras", etym: "PIE *lep-" } },
-            'moritur': { enunciado: "morior, mori, mortuus sum", es: { morph: "Verbo Deponente, 3ª sing, Pres. Ind", syntax: "Núcleo del Predicado", def: "muere", etym: "PIE *mer-" } },
-            'dies': { enunciado: "dies, diei, m/f", es: { morph: "Sustantivo, Masc, Plural", syntax: "Acusativo (C. Circunstancial Extensión)", def: "días", exp: "Pertenece a la 5ª declinación.", etym: "PIE *dyew-" } }
+            // Sustantivos 1ª Decl.
+            'hora': { enunciado: "hora, -ae, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Ablativo (C. Circunstancial Tiempo)", def: "la hora", etym: "Del gr. ὥρα", tabla: buildNounTable('hora','hora','horam','horae','horae','hora','horae','horae','horas','horarum','horis','horis') } },
+            'naturam': { enunciado: "natura, -ae, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Acusativo (C. Directo)", def: "la naturaleza", etym: "De nasci", tabla: buildNounTable('natura','natura','naturam','naturae','naturae','natura','naturae','naturae','naturas','naturarum','naturis','naturis') } },
+            'epistulam': { enunciado: "epistula, -ae, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Acusativo (C. Directo)", def: "la carta", etym: "Del gr. ἐπιστολή", tabla: buildNounTable('epistula','epistula','epistulam','epistulae','epistulae','epistula','epistulae','epistulae','epistulas','epistularum','epistulis','epistulis') } },
+            'flammae': { enunciado: "flamma, -ae, f", es: { morph: "Sustantivo, Fem, Plural", syntax: "Nominativo (Sujeto)", def: "las llamas", etym: "PIE *bʰlē-", tabla: buildNounTable('flamma','flamma','flammam','flammae','flammae','flamma','flammae','flammae','flammas','flammarum','flammis','flammis') } },
+            'fortuna': { enunciado: "fortuna, -ae, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Nominativo (Sujeto)", def: "la fortuna, la suerte", etym: "De fors, fortis", tabla: buildNounTable('fortuna','fortuna','fortunam','fortunae','fortunae','fortuna','fortunae','fortunae','fortunas','fortunarum','fortunis','fortunis') } },
+            'terram': { enunciado: "terra, -ae, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Acusativo (C.C. Dirección)", def: "la tierra", etym: "PIE *ters-", tabla: buildNounTable('terra','terra','terram','terrae','terrae','terra','terrae','terrae','terras','terrarum','terris','terris') } },
+            
+            // Sustantivos 2ª Decl.
+            'avunculo': { enunciado: "avunculus, -i, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Dativo (C. Indirecto)", def: "al tío materno", etym: "Diminutivo de avus", tabla: buildNounTable('avunculus','avuncule','avunculum','avunculi','avunculo','avunculo','avunculi','avunculi','avunculos','avunculorum','avunculis','avunculis') } },
+            'avunculus': { enunciado: "avunculus, -i, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Nominativo (Sujeto)", def: "el tío materno", etym: "Diminutivo de avus", tabla: buildNounTable('avunculus','avuncule','avunculum','avunculi','avunculo','avunculo','avunculi','avunculi','avunculos','avunculorum','avunculis','avunculis') } },
+            'periculum': { enunciado: "periculum, -i, n", es: { morph: "Sustantivo, Neutro, Sing", syntax: "Acusativo (C. Directo)", def: "el peligro", etym: "De periri", tabla: buildNounTable('periculum','periculum','periculum','periculi','periculo','periculo','pericula','pericula','pericula','periculorum','periculis','periculis') } },
+            'periculo': { enunciado: "periculum, -i, n", es: { morph: "Sustantivo, Neutro, Sing", syntax: "Ablativo (C. Circunstancial)", def: "el peligro", etym: "De periri", tabla: buildNounTable('periculum','periculum','periculum','periculi','periculo','periculo','pericula','pericula','pericula','periculorum','periculis','periculis') } },
+            'consilium': { enunciado: "consilium, -ii, n", es: { morph: "Sustantivo, Neutro, Sing", syntax: "Acusativo (C. Directo)", def: "el plan, consejo", etym: "De consulere", tabla: buildNounTable('consilium','consilium','consilium','consilii','consilio','consilio','consilia','consilia','consilia','consiliorum','consiliis','consiliis') } },
+            'auxilium': { enunciado: "auxilium, -ii, n", es: { morph: "Sustantivo, Neutro, Sing", syntax: "Acusativo (C. Directo)", def: "la ayuda", etym: "De augere", tabla: buildNounTable('auxilium','auxilium','auxilium','auxilii','auxilio','auxilio','auxilia','auxilia','auxilia','auxiliorum','auxiliis','auxiliis') } },
+            'gubernator': { enunciado: "gubernator, -oris, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Nominativo (Sujeto)", def: "el timonel, piloto", etym: "Del gr. κυβερνήτης", tabla: buildNounTable('gubernator','gubernator','gubernatorem','gubernatoris','gubernatori','gubernatore','gubernatores','gubernatores','gubernatores','gubernatorum','gubernatoribus','gubernatoribus') } },
+            'domine': { enunciado: "dominus, -i, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Vocativo (Apelación)", def: "¡señor!", etym: "De domus", tabla: buildNounTable('dominus','domine','dominum','domini','domino','domino','domini','domini','dominos','dominorum','dominis','dominis') } },
+            'amicum': { enunciado: "amicus, -i, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Acusativo (C. Directo)", def: "al amigo", etym: "De amare", tabla: buildNounTable('amicus','amice','amicum','amici','amico','amico','amici','amici','amicos','amicorum','amicis','amicis') } },
+            'viri': { enunciado: "vir, viri, m", es: { morph: "Sustantivo, Masc, Plural", syntax: "Nominativo (Sujeto)", def: "los hombres", etym: "PIE *wiHrós", tabla: buildNounTable('vir','vir','virum','viri','viro','viro','viri','viri','viros','virorum','viris','viris') } },
+            'vir': { enunciado: "vir, viri, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Nominativo (Sujeto)", def: "el hombre", etym: "PIE *wiHrós", tabla: buildNounTable('vir','vir','virum','viri','viro','viro','viri','viri','viros','virorum','viris','viris') } },
+            'vento': { enunciado: "ventus, -i, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Ablativo (Ablativo Absoluto)", def: "el viento", etym: "PIE *h₂wéh₁n̥ts", tabla: buildNounTable('ventus','vente','ventum','venti','vento','vento','venti','venti','ventos','ventorum','ventis','ventis') } },
+
+            // Sustantivos 3ª Decl.
+            'mater': { enunciado: "mater, matris, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Nominativo (Sujeto)", def: "la madre", etym: "PIE *méh₂tēr", tabla: buildNounTable('mater','mater','matrem','matris','matri','matre','matres','matres','matres','matrum','matribus','matribus') } },
+            'nubem': { enunciado: "nubes, nubis, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Acusativo (Sujeto de Or. Infinitivo)", def: "una nube", etym: "PIE *sneydʰ-", tabla: buildNounTable('nubes','nubes','nubem','nubis','nubi','nube','nubes','nubes','nubes','nubium','nubibus','nubibus') } },
+            'navem': { enunciado: "navis, navis, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Acusativo (Sujeto de Or. Infinitivo)", def: "la nave", etym: "PIE *néh₂ws", tabla: buildNounTable('navis','navis','navem','navis','navi','nave','naves','naves','naves','navium','navibus','navibus') } },
+            'naves': { enunciado: "navis, navis, f", es: { morph: "Sustantivo, Fem, Plural", syntax: "Nominativo (Sujeto Paciente)", def: "las naves", etym: "PIE *néh₂ws", tabla: buildNounTable('navis','navis','navem','navis','navi','nave','naves','naves','naves','navium','navibus','navibus') } },
+            'montis': { enunciado: "mons, montis, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Genitivo (C. del Nombre)", def: "del monte", etym: "PIE *men-", tabla: buildNounTable('mons','mons','montem','montis','monti','monte','montes','montes','montes','montium','montibus','montibus') } },
+            'monte': { enunciado: "mons, montis, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Ablativo (C. Circunstancial)", def: "el monte", etym: "PIE *men-", tabla: buildNounTable('mons','mons','montem','montis','monti','monte','montes','montes','montes','montium','montibus','montibus') } },
+            'litus': { enunciado: "litus, litoris, n", es: { morph: "Sustantivo, Neutro, Sing", syntax: "Acusativo (C.C. Dirección)", def: "la costa, playa", etym: "Desconocida", tabla: buildNounTable('litus','litus','litus','litoris','litori','litore','litora','litora','litora','litorum','litoribus','litoribus') } },
+            'cinis': { enunciado: "cinis, cineris, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Nominativo (Sujeto)", def: "la ceniza", etym: "PIE *ken-", tabla: buildNounTable('cinis','cinis','cinerem','cineris','cineri','cinere','cineres','cineres','cineres','cinerum','cineribus','cineribus') } },
+            'formidinem': { enunciado: "formido, -inis, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Acusativo (C. Directo)", def: "el miedo, terror", etym: "De formidare", tabla: buildNounTable('formido','formido','formidinem','formidinis','formidini','formidine','formidines','formidines','formidines','formidinum','formidinibus','formidinibus') } },
+            'sole': { enunciado: "sol, solis, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Ablativo (Ablativo Absoluto)", def: "el sol", etym: "PIE *sóh₂wl̥", tabla: buildNounTable('sol','sol','solem','solis','soli','sole','soles','soles','soles','solum','solibus','solibus') } },
+            'capitibusque': { enunciado: "caput, -itis, n", es: { morph: "Sustantivo, Neut, Plural + que", syntax: "Dativo (C. Indirecto / Régimen)", def: "y en las cabezas", etym: "PIE *kap-", tabla: buildNounTable('caput','caput','caput','capitis','capiti','capite','capita','capita','capita','capitum','capitibus','capitibus') } },
+            'lapidibus': { enunciado: "lapis, -idis, m", es: { morph: "Sustantivo, Masc, Plural", syntax: "Ablativo (C. Agente / Causa)", def: "por las piedras", etym: "PIE *lep-", tabla: buildNounTable('lapis','lapis','lapidem','lapidis','lapidi','lapide','lapides','lapides','lapides','lapidum','lapidibus','lapidibus') } },
+            'vapore': { enunciado: "vapor, -oris, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Ablativo (C. Agente / Causa)", def: "el vapor, gas", etym: "PIE *kwep-", tabla: buildNounTable('vapor','vapor','vaporem','vaporis','vapori','vapore','vapores','vapores','vapores','vaporum','vaporibus','vaporibus') } },
+            'mare': { enunciado: "mare, maris, n", es: { morph: "Sustantivo, Neutro, Sing", syntax: "Acusativo (Regido por prope)", def: "el mar", etym: "PIE *móri", tabla: buildNounTable('mare','mare','mare','maris','mari','mari','maria','maria','maria','marium','maribus','maribus') } },
+            'corpus': { enunciado: "corpus, corporis, n", es: { morph: "Sustantivo, Neutro, Sing", syntax: "Nominativo (Sujeto Paciente)", def: "el cuerpo", etym: "PIE *krep-", tabla: buildNounTable('corpus','corpus','corpus','corporis','corpori','corpore','corpora','corpora','corpora','corporum','corporibus','corporibus') } },
+
+            // Sustantivos 4ª y 5ª Decl.
+            'cursum': { enunciado: "cursus, -us, m", es: { morph: "Sustantivo (4ª), Masc, Sing", syntax: "Acusativo (C. Directo)", def: "el rumbo, curso", etym: "De currere", tabla: buildNounTable('cursus','cursus','cursum','cursus','cursui','cursu','cursus','cursus','cursus','cursuum','cursibus','cursibus') } },
+            'domo': { enunciado: "domus, -us, f", es: { morph: "Sustantivo (4ª/2ª), Fem, Sing", syntax: "Ablativo (C.C. Origen)", def: "la casa", etym: "PIE *dṓm", tabla: buildNounTable('domus','domus','domum','domus','domui','domo','domus','domus','domos','domuum','domibus','domibus') } },
+            'manibus': { enunciado: "manus, -us, f", es: { morph: "Sustantivo (4ª), Fem, Plural", syntax: "Ablativo (C.C. Instrumento)", def: "con las manos", etym: "PIE *meh₂-r-", tabla: buildNounTable('manus','manus','manum','manus','manui','manu','manus','manus','manus','manuum','manibus','manibus') } },
+            'spiritus': { enunciado: "spiritus, -us, m", es: { morph: "Sustantivo (4ª), Masc, Sing", syntax: "Nominativo (Sujeto)", def: "la respiración, aliento", etym: "De spirare", tabla: buildNounTable('spiritus','spiritus','spiritum','spiritus','spiritui','spiritu','spiritus','spiritus','spiritus','spirituum','spiritibus','spiritibus') } },
+            're': { enunciado: "res, rei, f", es: { morph: "Sustantivo (5ª), Fem, Sing", syntax: "Ablativo (Ablativo Absoluto)", def: "la cosa, situación", etym: "PIE *reH₁ís", tabla: buildNounTable('res','res','rem','rei','rei','re','res','res','res','rerum','rebus','rebus') } },
+            'die': { enunciado: "dies, diei, m/f", es: { morph: "Sustantivo (5ª), Masc, Sing", syntax: "Ablativo (C.C. Tiempo)", def: "al (siguiente) día", etym: "PIE *dyew-", tabla: buildNounTable('dies','dies','diem','diei','diei','die','dies','dies','dies','dierum','diebus','diebus') } },
+            'dies': { enunciado: "dies, diei, m/f", es: { morph: "Sustantivo (5ª), Masc, Plural", syntax: "Acusativo (C.C. Extensión Tiempo)", def: "los días", etym: "PIE *dyew-", tabla: buildNounTable('dies','dies','diem','diei','diei','die','dies','dies','dies','dierum','diebus','diebus') } },
+
+            // Verbos Regulares
+            'indicat': { enunciado: "indico, -are", es: { morph: "Verbo (1ª conj), 3ª sg, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "indica, señala", etym: "De in- + dico", tabla: buildVerbTable('indico','indicas','indicat','indicamus','indicatis','indicant','Pres. Ind. Activo') } },
+            'iubet': { enunciado: "iubeo, -ere", es: { morph: "Verbo (2ª conj), 3ª sg, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "ordena, manda", etym: "PIE *yowdʰ-", tabla: buildVerbTable('iubeo','iubes','iubet','iubemus','iubetis','iubent','Pres. Ind. Activo') } },
+            'exploret': { enunciado: "exploro, -are", es: { morph: "Verbo (1ª conj), 3ª sg, Pres. Subj. Activo", syntax: "Núcleo (Oración Final)", def: "para que explore", etym: "De ex- + plorare", tabla: buildVerbTable('explorem','explores','exploret','exploremus','exploretis','explorent','Pres. Subj. Activo') } },
+            'accipit': { enunciado: "accipio, -ere", es: { morph: "Verbo (3ª conj mixta), 3ª sg, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "recibe", etym: "De ad- + capio", tabla: buildVerbTable('accipio','accipis','accipit','accipimus','accipitis','accipiunt','Pres. Ind. Activo') } },
+            'nuntiabat': { enunciado: "nuntio, -are", es: { morph: "Verbo (1ª conj), 3ª sg, Pret. Imperfecto Ind.", syntax: "Núcleo (Or. de Relativo)", def: "anunciaba", etym: "De nuntius", tabla: buildVerbTable('nuntiabam','nuntiabas','nuntiabat','nuntiabamus','nuntiabatis','nuntiabant','Pret. Imp. Activo') } },
+            'mutat': { enunciado: "muto, -are", es: { morph: "Verbo (1ª conj), 3ª sg, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "cambia", etym: "PIE *mey-", tabla: buildVerbTable('muto','mutas','mutat','mutamus','mutatis','mutant','Pres. Ind. Activo') } },
+            'intellegit': { enunciado: "intellego, -ere", es: { morph: "Verbo (3ª conj), 3ª sg, Pres. Ind. Activo", syntax: "Núcleo (Or. Temporal)", def: "comprende", etym: "De inter- + lego", tabla: buildVerbTable('intellego','intellegis','intellegit','intellegimus','intellegitis','intellegunt','Pres. Ind. Activo') } },
+            'deducuntur': { enunciado: "deduco, -ere", es: { morph: "Verbo (3ª conj), 3ª pl, Pres. Ind. Pasivo", syntax: "Núcleo del Predicado", def: "son botadas (al mar)", etym: "De de- + duco", tabla: buildVerbTable('deducor','deduceris','deducitur','deducimur','deducimini','deducuntur','Pres. Ind. Pasivo') } },
+            'properat': { enunciado: "propero, -are", es: { morph: "Verbo (1ª conj), 3ª sg, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "se apresura", etym: "De properus", tabla: buildVerbTable('propero','properas','properat','properamus','properatis','properant','Pres. Ind. Activo') } },
+            'fugiunt': { enunciado: "fugio, -ere", es: { morph: "Verbo (3ª mixta), 3ª pl, Pres. Ind. Activo", syntax: "Núcleo (Or. Relativo)", def: "huyen", etym: "PIE *bʰewg-", tabla: buildVerbTable('fugio','fugis','fugit','fugimus','fugitis','fugiunt','Pres. Ind. Activo') } },
+            'incidebat': { enunciado: "incido, -ere", es: { morph: "Verbo (3ª conj), 3ª sg, Pret. Imperfecto", syntax: "Núcleo del Predicado", def: "caía sobre", etym: "De in- + cado", tabla: buildVerbTable('incidebam','incidebas','incidebat','incidebamus','incidebatis','incidebant','Pret. Imp. Activo') } },
+            'clamat': { enunciado: "clamo, -are", es: { morph: "Verbo (1ª conj), 3ª sg, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "grita", etym: "PIE *kelh-", tabla: buildVerbTable('clamo','clamas','clamat','clamamus','clamatis','clamant','Pres. Ind. Activo') } },
+            'iuvat': { enunciado: "iuvo, -are", es: { morph: "Verbo (1ª conj), 3ª sg, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "ayuda", etym: "PIE *yew-", tabla: buildVerbTable('iuvo','iuvas','iuvat','iuvamus','iuvatis','iuvant','Pres. Ind. Activo') } },
+            'invenit': { enunciado: "invenio, -ire", es: { morph: "Verbo (4ª conj), 3ª sg, Pres/Perf Ind.", syntax: "Núcleo del Predicado", def: "encuentra / encontró", etym: "De in- + venio", tabla: buildVerbTable('invenio','invenis','invenit','invenimus','invenitis','inveniunt','Pres. Ind. Activo') } },
+            'lucent': { enunciado: "luceo, -ere", es: { morph: "Verbo (2ª conj), 3ª pl, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "brillan", etym: "PIE *lewk-", tabla: buildVerbTable('luceo','luces','lucet','lucemus','lucetis','lucent','Pres. Ind. Activo') } },
+            'imponunt': { enunciado: "impono, -ere", es: { morph: "Verbo (3ª conj), 3ª pl, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "colocan, imponen", etym: "De in- + pono", tabla: buildVerbTable('impono','imponis','imponit','imponimus','imponitis','imponunt','Pres. Ind. Activo') } },
+            'vulnerentur': { enunciado: "vulnero, -are", es: { morph: "Verbo (1ª conj), 3ª pl, Pres. Subj. Pasivo", syntax: "Núcleo (Or. Final Negativa)", def: "para no ser heridos", etym: "De vulnus", tabla: buildVerbTable('vulnerer','vulnereris','vulneretur','vulneremur','vulneremini','vulnerentur','Pres. Subj. Pasivo') } },
+            'clauditur': { enunciado: "claudo, -ere", es: { morph: "Verbo (3ª conj), 3ª sg, Pres. Ind. Pasivo", syntax: "Núcleo del Predicado", def: "es ahogada, se cierra", etym: "PIE *klaw-", tabla: buildVerbTable('claudor','clauderis','clauditur','claudimur','claudimini','clauduntur','Pres. Ind. Pasivo') } },
+            'cadit': { enunciado: "cado, -ere", es: { morph: "Verbo (3ª conj), 3ª sg, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "cae", etym: "PIE *ḱad-", tabla: buildVerbTable('cado','cadis','cadit','cadimus','caditis','cadunt','Pres. Ind. Activo') } },
+
+            // Verbos Irregulares, Deponentes y Formas Nominales
+            'apparere': { enunciado: "appareo, -ere", es: { morph: "Verbo, Infinitivo Pres Activo", syntax: "Núcleo (Or. Infinitivo)", def: "aparecer" } },
+            'parari': { enunciado: "paro, -are", es: { morph: "Verbo, Infinitivo Pres Pasivo", syntax: "Núcleo (Or. Infinitivo)", def: "que fuera preparado" } },
+            'ferre': { enunciado: "fero, ferre", es: { morph: "Verbo Irregular, Infinitivo Pres Act", syntax: "C. Directo (Infinitivo Complemento)", def: "llevar", exp: "Verbo irregular polirrizo." } },
+            'dormire': { enunciado: "dormio, -ire", es: { morph: "Verbo (4ª), Infinitivo Pres Act", syntax: "C. Directo (Inf. Complemento)", def: "dormir" } },
+            'audet': { enunciado: "audeo, -ere, ausus sum", es: { morph: "Verbo Semideponente, 3ª sg Pres. Ind.", syntax: "Núcleo del Predicado", def: "se atreve", exp:"Forma activa, pero semideponente.", tabla: buildVerbTable('audeo','audes','audet','audemus','audetis','audent','Pres. Ind. Semideponente') } },
+            'solet': { enunciado: "soleo, -ere, solitus sum", es: { morph: "Verbo Semideponente, 3ª sg Pres. Ind.", syntax: "Núcleo del Predicado", def: "suele", tabla: buildVerbTable('soleo','soles','solet','solemus','soletis','solent','Pres. Ind. Semideponente') } },
+            'hortatur': { enunciado: "hortor, -ari", es: { morph: "Verbo Deponente, 3ª sg Pres. Ind.", syntax: "Núcleo del Predicado", def: "exhorta, anima", exp: "Forma pasiva, significado activo.", tabla: buildVerbTable('hortor','hortaris','hortatur','hortamur','hortamini','hortantur','Pres. Ind. Deponente') } },
+            'consolatur': { enunciado: "consolor, -ari", es: { morph: "Verbo Deponente, 3ª sg Pres. Ind.", syntax: "Núcleo del Predicado", def: "consuela", tabla: buildVerbTable('consolor','consolaris','consolatur','consolamur','consolamini','consolantur','Pres. Ind. Deponente') } },
+            'moritur': { enunciado: "morior, mori", es: { morph: "Verbo Deponente (3ª mixta), 3ª sg Pres. Ind.", syntax: "Núcleo del Predicado", def: "muere", tabla: buildVerbTable('morior','moreris','moritur','morimur','morimini','moriuntur','Pres. Ind. Deponente') } },
+            'fuge': { enunciado: "fugio, -ere", es: { morph: "Verbo, 2ª sg Imperativo Pres Act", syntax: "Núcleo del Predicado", def: "¡huye!" } },
+            'flecte': { enunciado: "flecto, -ere", es: { morph: "Verbo, 2ª sg Imperativo Pres Act", syntax: "Núcleo del Predicado", def: "¡dobla, gira!" } },
+            'exeunt': { enunciado: "exeo, exire", es: { morph: "Verbo Irregular, 3ª pl Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "salen", exp: "Compuesto de ex + eo." } },
+            'est': { enunciado: "sum, esse", es: { morph: "Verbo Irregular, 3ª sg Pres. Ind.", syntax: "Verbo Auxiliar", def: "es / ha sido (junto a inventum)" } },
+
+            // Participios
+            'visa': { enunciado: "video, -ere", es: { morph: "Participio Perfecto Pasivo, Fem, Sg", syntax: "Ablativo (Núcleo de Abl. Absoluto)", def: "vista", exp: "Forma un ablativo absoluto con 're mira'." } },
+            'exterrita': { enunciado: "exterreo, -ere", es: { morph: "Participio Perfecto Pasivo, Fem, Sg", syntax: "Nominativo (Atributo/Concertado)", def: "aterrorizada" } },
+            'perterritus': { enunciado: "perterreo, -ere", es: { morph: "Participio Perfecto Pasivo, Masc, Sg", syntax: "Nominativo (Concertado)", def: "muy asustado" } },
+            'ostendens': { enunciado: "ostendo, -ere", es: { morph: "Participio Presente Activo, Masc, Sg", syntax: "Nominativo (Concertado)", def: "mostrando" } },
+            'trepidantem': { enunciado: "trepido, -are", es: { morph: "Participio Presente Activo, Masc, Sg", syntax: "Acusativo (Concertado con amicum)", def: "que temblaba / temblando" } },
+            'complexus': { enunciado: "complector, -i", es: { morph: "Participio Perfecto de Deponente", syntax: "Nominativo (Concertado activo)", def: "habiendo abrazado", exp: "Al ser deponente, su participio de perfecto tiene valor activo." } },
+            'obscurato': { enunciado: "obscuro, -are", es: { morph: "Participio Perfecto Pasivo, Masc, Sg", syntax: "Ablativo (Núcleo de Abl. Absoluto)", def: "oscurecido" } },
+            'flante': { enunciado: "flo, -are", es: { morph: "Participio Presente Activo, Masc, Sg", syntax: "Ablativo (Núcleo de Abl. Absoluto)", def: "soplando" } },
+            'inventum': { enunciado: "invenio, -ire", es: { morph: "Participio Perfecto Pasivo, Neutro, Sg", syntax: "Nominativo (Forma Pret. Perf. Pasivo con 'est')", def: "encontrado" } },
+            'requiescenti': { enunciado: "requiesco, -ere", es: { morph: "Participio Presente Activo, Dativo Sg", syntax: "Dativo (Régimen de similius)", def: "al que descansa" } },
+
+            // Adjetivos
+            'septima': { enunciado: "septimus, -a, -um", es: { morph: "Adjetivo Numeral, Fem, Sg", syntax: "Ablativo (Adyacente)", def: "séptima" } },
+            'mea': { enunciado: "meus, -a, -um", es: { morph: "Adjetivo Posesivo, Fem, Sg", syntax: "Nominativo (Adyacente)", def: "mía, mi" } },
+            'inusitatam': { enunciado: "inusitatus, -a, -um", es: { morph: "Adjetivo, Fem, Sg", syntax: "Acusativo (Adyacente)", def: "inusual" } },
+            'mira': { enunciado: "mirus, -a, -um", es: { morph: "Adjetivo, Fem, Sg", syntax: "Ablativo (Adyacente)", def: "asombrosa, admirable" } },
+            'magnum': { enunciado: "magnus, -a, -um", es: { morph: "Adjetivo, Neutro, Sg", syntax: "Acusativo (Adyacente)", def: "grande" } },
+            'gravis': { enunciado: "gravis, -e", es: { morph: "Adjetivo (3ª decl), Masc, Sg", syntax: "Nominativo (Adyacente)", def: "pesada, grave" } },
+            'nullam': { enunciado: "nullus, -a, -um", es: { morph: "Adjetivo Pronominal, Fem, Sg", syntax: "Acusativo (Adyacente)", def: "ningún, ninguna" } },
+            'fortes': { enunciado: "fortis, -e", es: { morph: "Adjetivo (3ª decl) sustantivado, Masc, Pl", syntax: "Acusativo (C. Directo)", def: "a los valientes" } },
+            'suum': { enunciado: "suus, -a, -um", es: { morph: "Adjetivo Posesivo, Masc, Sg", syntax: "Acusativo (Adyacente)", def: "su, suyo" } },
+            'ingentes': { enunciado: "ingens, -ntis", es: { morph: "Adjetivo (3ª decl), Fem, Pl", syntax: "Nominativo (Adyacente)", def: "enormes, inmensas" } },
+            'tanto': { enunciado: "tantus, -a, -um", es: { morph: "Adjetivo, Neutro, Sg", syntax: "Ablativo (Adyacente)", def: "tan gran" } },
+            'postero': { enunciado: "posterus, -a, -um", es: { morph: "Adjetivo, Masc, Sg", syntax: "Ablativo (Adyacente)", def: "al siguiente" } },
+            'crasso': { enunciado: "crassus, -a, -um", es: { morph: "Adjetivo, Masc, Sg", syntax: "Ablativo (Adyacente)", def: "denso, grueso" } },
+            'clarissimus': { enunciado: "clarus, -a, -um (Superlativo)", es: { morph: "Adjetivo Superlativo, Masc, Sg", syntax: "Nominativo (Adyacente)", def: "ilustrísimo, muy famoso" } },
+            'integrum': { enunciado: "integer, -gra, -grum", es: { morph: "Adjetivo, Neutro, Sg", syntax: "Nominativo (Predicativo)", def: "intacto, íntegro" } },
+            'similius': { enunciado: "similis, -e (Comparativo)", es: { morph: "Adjetivo Comparativo, Neutro, Sg", syntax: "Nominativo (Predicativo)", def: "más parecido", exp: "Rige caso Dativo (requiescenti)." } },
+
+            // Pronombres
+            'ille': { enunciado: "ille, illa, illud", es: { morph: "Pronombre Demostrativo, Masc, Sing", syntax: "Nominativo (Sujeto)", def: "aquel, él (Plinio)" } },
+            'quae': { enunciado: "qui, quae, quod", es: { morph: "Pronombre Relativo, Fem, Sing", syntax: "Nominativo (Sujeto)", def: "la cual, quien" } },
+            'unde': { enunciado: "unde", es: { morph: "Adverbio/Pronombre Relativo", syntax: "C.C. Origen", def: "de donde" } },
+            'alii': { enunciado: "alius, -a, -ud", es: { morph: "Pronombre Indefinido, Masc, Pl", syntax: "Nominativo (Sujeto)", def: "otros" } },
+            'eum': { enunciado: "is, ea, id", es: { morph: "Pronombre Demostrativo, Masc, Sing", syntax: "Acusativo (C. Directo)", def: "a él" } },
+            'quem': { enunciado: "qui, quae, quod", es: { morph: "Pronombre Relativo, Masc, Sing", syntax: "Acusativo (C. Directo)", def: "al cual" } },
+            'eius': { enunciado: "is, ea, id", es: { morph: "Pronombre Demostrativo, Masc, Sing", syntax: "Genitivo (C. del Nombre)", def: "su (de él)" } }
         };
 
         window.onload = function() {
@@ -436,7 +564,7 @@
             
             const container = document.getElementById('latin-container');
             container.innerHTML = latinText.split(/\s+/).map((word) => {
-                const cleanWord = word.replace(/[.,;:!?"]/g, '');
+                const cleanWord = word.replace(/[.,;:"!?()]/g, '');
                 return `<span class="word-token" onclick="analyze('${cleanWord}')">${word}</span>`;
             }).join(' ');
 
@@ -444,22 +572,20 @@
         };
 
         function checkGameState() {
-            const status = localStorage.getItem('vesubio_status'); 
+            const status = localStorage.getItem('vesubio_pro_status'); 
             if (status === 'won') {
-                teamName = localStorage.getItem('vesubio_team') || "Escriba";
+                teamName = localStorage.getItem('vesubio_pro_team') || "Escriba";
                 document.getElementById('finalTeamName').innerText = teamName;
-                document.getElementById('finalTime').innerText = localStorage.getItem('vesubio_timeStr') || "00:00";
-                document.getElementById('finalMistakes').innerText = localStorage.getItem('vesubio_mistakes') || "0";
-                document.getElementById('finalScore').innerText = localStorage.getItem('vesubio_score') || "0 pts";
+                document.getElementById('finalTime').innerText = localStorage.getItem('vesubio_pro_timeStr') || "00:00";
+                document.getElementById('finalMistakes').innerText = localStorage.getItem('vesubio_pro_mistakes') || "0";
+                document.getElementById('finalScore').innerText = localStorage.getItem('vesubio_pro_score') || "0 pts";
                 hide('introStage'); show('victoryStage');
-                document.getElementById('formStatus').style.display = 'none'; 
             } else if (status === 'lost') {
                 hide('introStage'); show('defeatStage');
-                document.getElementById('defeatStatusText').style.display = 'none';
             } else if (status === 'playing') {
-                const endTime = parseInt(localStorage.getItem('vesubio_endTime'));
-                teamName = localStorage.getItem('vesubio_team');
-                mistakes = parseInt(localStorage.getItem('vesubio_mistakes')) || 0;
+                const endTime = parseInt(localStorage.getItem('vesubio_pro_endTime'));
+                teamName = localStorage.getItem('vesubio_pro_team');
+                mistakes = parseInt(localStorage.getItem('vesubio_pro_mistakes')) || 0;
                 
                 const now = Date.now();
                 if (now >= endTime) { gameOver(); } 
@@ -476,7 +602,7 @@
         }
 
         // ==========================================
-        // LATINITATIS PRO: ORACULUM API Y RETOS
+        // LATINITATIS PRO: ORACULUM API
         // ==========================================
         function openApiModal() {
             document.getElementById('apiModal').classList.add('active');
@@ -543,9 +669,10 @@
                             <p class="text-2xl italic font-serif text-white mb-6 leading-tight">"${res.es.def}"</p>
                             ${res.es.exp ? `<div class="bg-red-950/40 p-4 rounded-xl mb-6 text-yellow-200 text-sm font-serif border border-red-800/50 shadow-sm leading-relaxed"><b>Nota Gramatical:</b><br>${res.es.exp}</div>` : ''}
                             <div class="bg-slate-800 p-4 rounded-xl text-sm italic leading-relaxed text-slate-400"><b>Etimología (Raíces PIE):</b><br>${res.es.etym || 'Desconocida'}</div>
+                            ${res.tabla ? `<div class="mt-6">${res.tabla}</div>` : ''}
                         </div>
                     </div>`;
-            } catch (e) { c.innerHTML = `<p class='p-6 bg-red-900/50 border border-red-500 text-red-200 rounded text-center font-bold'>Error IA: ${e.message}</p>`; }
+            } catch (e) { c.innerHTML = `<p class='p-6 bg-red-900/50 border border-red-500 text-red-200 rounded text-center font-bold'>Error: ${e.message}</p>`; }
         }
 
         async function generateExercise() {
@@ -570,25 +697,23 @@
         }
 
         // ==========================================
-        // OÑEHA'Ã HA OGUATA HAG̃UA (Escape Room Logic)
+        // ESCAPE ROOM LOGIC
         // ==========================================
         function startGame() {
             const nameInput = document.getElementById('teamName').value.trim();
             if (!nameInput) {
                 document.getElementById('name-error').classList.remove('hidden');
-                const inputField = document.getElementById('teamName');
-                inputField.classList.add('border-red-500');
-                setTimeout(() => inputField.classList.remove('border-red-500'), 1000);
+                setTimeout(() => document.getElementById('name-error').classList.add('hidden'), 2000);
                 return;
             }
             
             teamName = nameInput;
             mistakes = 0;
             
-            localStorage.setItem('vesubio_status', 'playing');
-            localStorage.setItem('vesubio_team', teamName);
-            localStorage.setItem('vesubio_mistakes', '0');
-            localStorage.setItem('vesubio_endTime', (Date.now() + timeRemaining * 1000).toString());
+            localStorage.setItem('vesubio_pro_status', 'playing');
+            localStorage.setItem('vesubio_pro_team', teamName);
+            localStorage.setItem('vesubio_pro_mistakes', '0');
+            localStorage.setItem('vesubio_pro_endTime', (Date.now() + timeRemaining * 1000).toString());
             
             resumeGame();
         }
@@ -598,7 +723,7 @@
             document.getElementById('timerDisplay').innerText = formatTime(timeRemaining);
             
             timerInterval = setInterval(() => {
-                if (localStorage.getItem('vesubio_status') !== 'playing') return;
+                if (localStorage.getItem('vesubio_pro_status') !== 'playing') return;
                 timeRemaining--;
                 document.getElementById('timerDisplay').innerText = formatTime(timeRemaining);
                 if (timeRemaining <= 0) { clearInterval(timerInterval); gameOver(); }
@@ -606,26 +731,15 @@
         }
 
         function gameOver() {
-            if (localStorage.getItem('vesubio_status') === 'won') return;
-            localStorage.setItem('vesubio_status', 'lost');
+            if (localStorage.getItem('vesubio_pro_status') === 'won') return;
+            localStorage.setItem('vesubio_pro_status', 'lost');
             if (timerInterval) clearInterval(timerInterval);
-
-            const formUrl = 'https://formsubmit.co/ajax/alejandroruizgueto@hotmail.es';
-            fetch(formUrl, {
-                method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify({
-                    _subject: "💀 Escape Room FALLIDO: " + teamName + " (Vesubio)",
-                    Investigadores: teamName, Resultado: "Derrota (Tiempo Agotado)", Errores_Cometidos: mistakes, _template: "table"
-                })
-            }).then(() => { document.getElementById('defeatStatusText').innerText = "Roma ha sido informada de vuestra caída."; })
-              .catch(err => { document.getElementById('defeatStatusText').innerText = "Error de conexión informando a Roma."; });
-
             hide('gameStage'); hide('gameHeader'); hide('introStage'); show('defeatStage');
         }
 
         function victory() {
             if (timerInterval) clearInterval(timerInterval);
-            localStorage.setItem('vesubio_status', 'won');
+            localStorage.setItem('vesubio_pro_status', 'won');
             
             const secondsUsed = (45 * 60) - timeRemaining;
             let finalScore = BASE_SCORE - secondsUsed - (mistakes * 50);
@@ -638,30 +752,11 @@
             document.getElementById('finalMistakes').innerText = mistakes;
             document.getElementById('finalScore').innerText = finalScore + " pts";
             
-            localStorage.setItem('vesubio_timeStr', timeStr);
-            localStorage.setItem('vesubio_mistakes', mistakes.toString());
-            localStorage.setItem('vesubio_score', finalScore + " pts");
+            localStorage.setItem('vesubio_pro_timeStr', timeStr);
+            localStorage.setItem('vesubio_pro_mistakes', mistakes.toString());
+            localStorage.setItem('vesubio_pro_score', finalScore + " pts");
 
             hide('gameStage'); hide('gameHeader'); show('victoryStage');
-
-            const formUrl = 'https://formsubmit.co/ajax/alejandroruizgueto@hotmail.es';
-            fetch(formUrl, {
-                method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify({
-                    _subject: "⛵ Escape Room SUPERADO: " + teamName + " (Vesubio)",
-                    Investigadores: teamName, Resultado: "Victoria", Tiempo_Sobrante: timeStr, Errores_Cometidos: mistakes, Puntuacion_Final: finalScore, _template: "table"
-                })
-            }).then(response => response.json())
-              .then(data => {
-                document.getElementById('statusDot').classList.replace('bg-yellow-500', 'bg-emerald-500');
-                document.getElementById('statusDot').classList.remove('animate-pulse');
-                document.getElementById('statusText').innerText = "Enviado por paloma mensajera a Roma";
-                document.getElementById('statusText').classList.replace('text-slate-400', 'text-emerald-400');
-            }).catch(err => {
-                document.getElementById('statusDot').classList.replace('bg-yellow-500', 'bg-red-500');
-                document.getElementById('statusText').innerText = "Error enviando a Roma";
-                document.getElementById('statusText').classList.replace('text-slate-400', 'text-red-400');
-            });
         }
 
         function normalizeString(str) { return str.toLowerCase().trim().replace(/[.,;:!?"]/g, ''); }
@@ -689,21 +784,18 @@
                 document.getElementById('prueba1').classList.remove('ring-2', 'ring-orange-500');
                 document.getElementById('prueba1').classList.add('opacity-80');
             } else {
-                mistakes++; localStorage.setItem('vesubio_mistakes', mistakes.toString());
+                mistakes++; localStorage.setItem('vesubio_pro_mistakes', mistakes.toString());
                 document.getElementById('p1-error').classList.remove('hidden');
-                const panel = document.getElementById('prueba1');
-                panel.classList.add('border-red-500');
-                setTimeout(() => panel.classList.remove('border-red-500'), 1000);
+                setTimeout(() => document.getElementById('p1-error').classList.add('hidden'), 3000);
             }
         }
 
         function checkPrueba2() {
             const q1 = document.querySelector('input[name="t1"]:checked')?.value;
             const q2 = document.querySelector('input[name="t2"]:checked')?.value;
-            const q3 = document.querySelector('input[name="t3"]:checked')?.value;
             const translationText = document.getElementById('fullTranslation').value.trim();
 
-            if (q1 === 'a' && q2 === 'b' && q3 === 'a' && translationText.length > 30) {
+            if (q1 === 'a' && q2 === 'b' && translationText.length > 20) {
                 document.getElementById('p2-error').classList.add('hidden');
                 const btn = document.querySelector('#prueba2 button');
                 btn.innerText = "¡Faro II Encendido!";
@@ -711,31 +803,53 @@
 
                 const p3 = document.getElementById('prueba3');
                 p3.classList.remove('opacity-50', 'pointer-events-none');
-                p3.classList.add('ring-2', 'ring-red-500', 'shadow-[0_0_20px_rgba(239,68,68,0.3)]');
+                p3.classList.add('ring-2', 'ring-emerald-500', 'shadow-[0_0_20px_rgba(16,185,129,0.3)]');
                 document.getElementById('prueba2').classList.remove('ring-2', 'ring-yellow-500');
                 document.getElementById('prueba2').classList.add('opacity-80');
             } else {
-                mistakes++; localStorage.setItem('vesubio_mistakes', mistakes.toString());
+                mistakes++; localStorage.setItem('vesubio_pro_mistakes', mistakes.toString());
                 document.getElementById('p2-error').classList.remove('hidden');
-                const panel = document.getElementById('prueba2');
-                panel.classList.add('border-red-500');
-                setTimeout(() => panel.classList.remove('border-red-500'), 1000);
+                setTimeout(() => document.getElementById('p2-error').classList.add('hidden'), 3000);
             }
         }
 
         function checkPrueba3() {
+            const q1 = document.getElementById('p3-q1').value;
+            const q2 = document.getElementById('p3-q2').value;
+            const q3 = document.getElementById('p3-q3').value;
+
+            if (q1 === 'vulcano' && q2 === 'pompeya' && q3 === 'prefecto') {
+                document.getElementById('p3-error').classList.add('hidden');
+                const btn = document.querySelector('#prueba3 button');
+                btn.innerText = "¡Faro III Encendido!";
+                btn.disabled = true;
+
+                const p4 = document.getElementById('prueba4');
+                p4.classList.remove('opacity-50', 'pointer-events-none');
+                p4.classList.add('ring-2', 'ring-red-500', 'shadow-[0_0_20px_rgba(239,68,68,0.3)]');
+                document.getElementById('prueba3').classList.remove('ring-2', 'ring-emerald-500');
+                document.getElementById('prueba3').classList.add('opacity-80');
+            } else {
+                mistakes++; localStorage.setItem('vesubio_pro_mistakes', mistakes.toString());
+                document.getElementById('p3-error').classList.remove('hidden');
+                setTimeout(() => document.getElementById('p3-error').classList.add('hidden'), 3000);
+            }
+        }
+
+        function checkPrueba4() {
             const l1 = parseInt(document.getElementById('lock1').value, 10);
             const l2 = parseInt(document.getElementById('lock2').value, 10);
             const l3 = parseInt(document.getElementById('lock3').value, 10);
             const l4 = parseInt(document.getElementById('lock4').value, 10);
             const l5 = parseInt(document.getElementById('lock5').value, 10);
+            const l6 = parseInt(document.getElementById('lock6').value, 10);
 
-            // Código: 5 (dies 5ª decl), 1 (properat 1ª conj), 6 (lapidibus ablativo), 3 (3 abl absolutos), 3 (Epístola)
-            if (l1 === 5 && l2 === 1 && l3 === 6 && l4 === 3 && l5 === 3) {
+            // Código: 5 (dies 5ª decl), 1 (properat 1ª conj), 6 (lapidibus ablativo), 3 (3 abl absolutos), 3 (Epístola), 7 (V-u-l-c-a-n-o)
+            if (l1 === 5 && l2 === 1 && l3 === 6 && l4 === 3 && l5 === 3 && l6 === 7) {
                 victory();
             } else {
-                mistakes++; localStorage.setItem('vesubio_mistakes', mistakes.toString());
-                document.getElementById('p3-error').classList.remove('hidden');
+                mistakes++; localStorage.setItem('vesubio_pro_mistakes', mistakes.toString());
+                document.getElementById('p4-error').classList.remove('hidden');
                 const inputs = document.querySelectorAll('.candado-input');
                 inputs.forEach(i => {
                     i.classList.add('border-red-500', 'text-red-500');
