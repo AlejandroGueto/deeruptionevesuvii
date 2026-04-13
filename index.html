@@ -88,7 +88,7 @@
             <h3 class="font-cinzel text-xl text-orange-500 mb-4 flex items-center justify-center gap-2">
                 <i data-lucide="key"></i> Configurar Clavis (Oráculo)
             </h3>
-            <p class="text-sm text-slate-400 mb-4">Introduce tu API Key de Groq para habilitar retos generativos (el diccionario funciona sin ella).</p>
+            <p class="text-sm text-slate-400 mb-4">Introduce tu API Key de Groq para habilitar retos generativos (el diccionario interactivo y el escape room funcionan sin ella).</p>
             <input type="text" id="apiKeyInput" class="w-full bg-black/50 border border-orange-900/50 text-white p-3 rounded mb-4 focus:border-orange-500 outline-none text-center" placeholder="gsk_...">
             <div class="flex gap-4 justify-center">
                 <button onclick="closeApiModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded font-cinzel text-sm uppercase transition">Cancelar</button>
@@ -131,9 +131,9 @@
             <div class="mb-8 bg-orange-950/30 p-6 rounded border border-orange-900/50 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="text-left">
                     <p class="text-orange-500 font-cinzel text-md mb-1 flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> El Oráculo de Apolo</p>
-                    <p class="text-xs text-slate-400">Diccionario inteligente y retos dinámicos (Groq API).</p>
+                    <p class="text-xs text-slate-400">Diccionario inteligente con análisis exhaustivo del 100% del texto.</p>
                 </div>
-                <button onclick="openApiModal()" class="px-4 py-2 bg-orange-900 hover:bg-orange-800 text-slate-200 text-xs font-cinzel rounded transition uppercase">Activar Clavis</button>
+                <button onclick="openApiModal()" class="px-4 py-2 bg-orange-900 hover:bg-orange-800 text-slate-200 text-xs font-cinzel rounded transition uppercase">Activar IA Externa</button>
             </div>
 
             <button onclick="startGame()" class="px-8 py-4 bg-gradient-to-r from-orange-700 to-red-800 hover:from-orange-600 hover:to-red-700 text-white font-cinzel font-bold text-xl rounded transition transform hover:scale-105 shadow-[0_0_15px_rgba(234,88,12,0.4)] w-full md:w-auto border border-orange-500/50">
@@ -154,7 +154,7 @@
                     <!-- Text injected by JS -->
                 </div>
                 <div class="mt-8 pt-4 border-t border-amber-900/20 text-sm italic text-amber-900/70">
-                    <p class="mb-2 font-bold flex items-center gap-2"><i data-lucide="info" class="w-4 h-4"></i> Haz clic en cualquier palabra para consultar su morfología.</p>
+                    <p class="mb-2 font-bold flex items-center gap-2"><i data-lucide="info" class="w-4 h-4"></i> Haz clic en CUALQUIER palabra para consultar su morfología completa.</p>
                 </div>
             </div>
 
@@ -162,8 +162,8 @@
                 <h3 class="text-xl text-orange-500 mb-4 flex items-center gap-2 font-cinzel">
                     <i data-lucide="flame" class="w-5 h-5"></i> Reto Magistral
                 </h3>
-                <p class="text-sm text-slate-300 mb-4">Genera un reto de comprensión automático usando el poder de la IA (Requiere Clavis).</p>
-                <button onclick="generateExercise()" class="w-full py-3 bg-orange-900 hover:bg-orange-800 text-white rounded font-cinzel text-sm uppercase tracking-widest transition-all shadow">Generar Reto</button>
+                <p class="text-sm text-slate-300 mb-4">Genera un reto de comprensión automático usando el poder de la IA (Requiere Clavis Externa).</p>
+                <button onclick="generateExercise()" class="w-full py-3 bg-orange-900 hover:bg-orange-800 text-white rounded font-cinzel text-sm uppercase tracking-widest transition-all shadow">Generar Reto IA</button>
                 <div id="exercise-area" class="hidden mt-6 pt-6 border-t border-orange-900/50"></div>
             </div>
         </div>
@@ -176,7 +176,7 @@
                 <h3 class="text-2xl text-orange-500 mb-4 flex items-center gap-2 font-cinzel">
                     <span class="bg-orange-900/50 p-2 rounded text-orange-300 border border-orange-700 text-sm">I</span> Las Cenizas de la Sintaxis
                 </h3>
-                <p class="mb-6 text-slate-300">Identificad estas tres estructuras en la narración de Plinio. Escribid la <span class="font-bold text-orange-400">palabra exacta</span> en latín tal y como aparece en el texto.</p>
+                <p class="mb-6 text-slate-300">Identificad estas cuatro estructuras en la narración de Plinio. Escribid la <span class="font-bold text-orange-400">palabra exacta</span> en latín tal y como aparece en el texto.</p>
                 
                 <div class="space-y-4">
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
@@ -184,12 +184,16 @@
                         <input type="text" id="p1-q1" class="input-latino w-full md:w-1/3" autocomplete="off" spellcheck="false" placeholder="verbo">
                     </div>
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
-                        <label class="text-sm font-bold text-slate-400 w-full md:w-2/3">2. Sustantivo de la 4ª declinación usado en ablativo plural para protegerse de las piedras:</label>
+                        <label class="text-sm font-bold text-slate-400 w-full md:w-2/3">2. Sustantivo de la 4ª declinación (ablativo plural) para protegerse de las piedras:</label>
                         <input type="text" id="p1-q2" class="input-latino w-full md:w-1/3" autocomplete="off" spellcheck="false" placeholder="sustantivo">
                     </div>
                     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
                         <label class="text-sm font-bold text-slate-400 w-full md:w-2/3">3. Participio de presente activo (nom. sing.) que denota que Plinio no muestra miedo:</label>
                         <input type="text" id="p1-q3" class="input-latino w-full md:w-1/3" autocomplete="off" spellcheck="false" placeholder="participio">
+                    </div>
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
+                        <label class="text-sm font-bold text-slate-400 w-full md:w-2/3">4. Infinitivo de presente pasivo del que depende el verbo 'iubet':</label>
+                        <input type="text" id="p1-q4" class="input-latino w-full md:w-1/3" autocomplete="off" spellcheck="false" placeholder="infinitivo">
                     </div>
                 </div>
                 <div class="mt-6 text-right">
@@ -248,7 +252,7 @@
                 <p id="p2-error" class="text-red-400 text-sm mt-3 hidden text-right">La traducción es imprecisa (-50 pts).</p>
             </div>
 
-            <!-- PRUEBA 3 (CULTURA Y MITOLOGÍA) -->
+            <!-- PRUEBA 3 -->
             <div id="prueba3" class="bg-black/60 border border-orange-900/50 p-6 rounded-lg shadow-lg relative overflow-hidden transition-all duration-500 opacity-50 pointer-events-none">
                 <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
                 <h3 class="text-2xl text-emerald-500 mb-4 flex items-center gap-2 font-cinzel">
@@ -258,7 +262,7 @@
                 
                 <div class="space-y-4">
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-bold text-slate-400">1. ¿A qué dios de la fragua y el fuego subterráneo asociaban los romanos el poder destructivo de los volcanes?</label>
+                        <label class="text-sm font-bold text-slate-400">1. ¿A qué dios de la fragua y el fuego asociaban los romanos el poder de los volcanes?</label>
                         <select id="p3-q1" class="select-latino p-2 rounded w-full md:w-1/2">
                             <option value="">Selecciona una respuesta...</option>
                             <option value="pluton">Plutón</option>
@@ -268,7 +272,7 @@
                         </select>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-bold text-slate-400">2. ¿Qué importantes ciudades quedaron sepultadas bajo esta famosa erupción del año 79 d.C.?</label>
+                        <label class="text-sm font-bold text-slate-400">2. ¿Qué ciudades quedaron sepultadas bajo esta erupción del año 79 d.C.?</label>
                         <select id="p3-q2" class="select-latino p-2 rounded w-full md:w-1/2">
                             <option value="">Selecciona una respuesta...</option>
                             <option value="roma">Roma y Ostia</option>
@@ -278,13 +282,23 @@
                         </select>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-bold text-slate-400">3. ¿Cuál era el cargo militar exacto de Plinio el Viejo cuando zarpó a ayudar a los afectados?</label>
+                        <label class="text-sm font-bold text-slate-400">3. ¿Cuál era el cargo militar de Plinio el Viejo cuando zarpó a ayudar a los afectados?</label>
                         <select id="p3-q3" class="select-latino p-2 rounded w-full md:w-1/2">
                             <option value="">Selecciona una respuesta...</option>
                             <option value="consul">Cónsul de Roma</option>
                             <option value="prefecto">Prefecto (Almirante) de la flota</option>
                             <option value="legado">Legado de la Legión X</option>
                             <option value="tribuno">Tribuno de la plebe</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-bold text-slate-400">4. ¿Cómo se llama la famosa obra donde Plinio el Joven recopiló este texto?</label>
+                        <select id="p3-q4" class="select-latino p-2 rounded w-full md:w-1/2">
+                            <option value="">Selecciona una respuesta...</option>
+                            <option value="anales">Los Anales</option>
+                            <option value="catilinarias">Las Catilinarias</option>
+                            <option value="eneida">La Eneida</option>
+                            <option value="epistolas">Las Epístolas</option>
                         </select>
                     </div>
                 </div>
@@ -300,38 +314,38 @@
                 <h3 class="text-2xl text-red-500 mb-4 flex items-center gap-2 font-cinzel">
                     <span class="bg-red-900/50 p-2 rounded text-red-300 border border-red-700 text-sm">IV</span> El Código de la Flota
                 </h3>
-                <p class="mb-6 text-slate-300">Los barcos esperan vuestra señal final. Aportad los <span class="text-red-400 font-bold">seis dígitos</span> extraídos de la gramática y el contexto.</p>
+                <p class="mb-6 text-slate-300">Los barcos esperan vuestra señal final. Aportad los <span class="text-red-400 font-bold">seis dígitos</span> extraídos de la gramática y el contexto literario.</p>
                 
                 <div class="grid grid-cols-3 md:grid-cols-6 gap-2 mb-8">
                     <!-- Lock 1 -->
                     <div class="bg-red-950/20 p-2 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
                         <p class="text-[9px] md:text-xs text-slate-400 mb-2">Declinación de la palabra "<strong>dies</strong>".</p>
-                        <input type="number" id="lock1" min="1" max="5" class="candado-input mt-auto">
+                        <input type="number" id="lock1" min="1" max="9" class="candado-input mt-auto">
                     </div>
                     <!-- Lock 2 -->
                     <div class="bg-red-950/20 p-2 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
                         <p class="text-[9px] md:text-xs text-slate-400 mb-2">Conjugación del verbo "<strong>properat</strong>".</p>
-                        <input type="number" id="lock2" min="1" max="4" class="candado-input mt-auto">
+                        <input type="number" id="lock2" min="1" max="9" class="candado-input mt-auto">
                     </div>
                     <!-- Lock 3 -->
                     <div class="bg-red-950/20 p-2 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
-                        <p class="text-[9px] md:text-xs text-slate-400 mb-2">Orden tradicional (1 al 6) del caso de "<strong>lapidibus</strong>".</p>
-                        <input type="number" id="lock3" min="1" max="6" class="candado-input mt-auto">
+                        <p class="text-[9px] md:text-xs text-slate-400 mb-2">Número de letras del dios del fuego.</p>
+                        <input type="number" id="lock3" min="1" max="9" class="candado-input mt-auto">
                     </div>
                     <!-- Lock 4 -->
                     <div class="bg-red-950/20 p-2 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
-                        <p class="text-[9px] md:text-xs text-slate-400 mb-2">Cantidad de <strong>Ablativos Absolutos</strong> en el texto.</p>
-                        <input type="number" id="lock4" min="0" max="9" class="candado-input mt-auto">
+                        <p class="text-[9px] md:text-xs text-slate-400 mb-2">Declinación del sustantivo "<strong>navem</strong>".</p>
+                        <input type="number" id="lock4" min="1" max="9" class="candado-input mt-auto">
                     </div>
                     <!-- Lock 5 -->
                     <div class="bg-red-950/20 p-2 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
-                        <p class="text-[9px] md:text-xs text-slate-400 mb-2">Subgénero literario (1:Épica, 2:Teatro, 3:Epístola).</p>
-                        <input type="number" id="lock5" min="1" max="4" class="candado-input mt-auto">
+                        <p class="text-[9px] md:text-xs text-slate-400 mb-2">Orden tradicional del caso "<strong>lapidibus</strong>".</p>
+                        <input type="number" id="lock5" min="1" max="9" class="candado-input mt-auto">
                     </div>
                     <!-- Lock 6 -->
                     <div class="bg-red-950/20 p-2 rounded text-center border border-red-900/50 flex flex-col items-center justify-between">
-                        <p class="text-[9px] md:text-xs text-slate-400 mb-2">Número de letras del dios del fuego romano.</p>
-                        <input type="number" id="lock6" min="1" max="9" class="candado-input mt-auto">
+                        <p class="text-[9px] md:text-xs text-slate-400 mb-2">Total de <strong>Ablativos Absolutos</strong> en el texto.</p>
+                        <input type="number" id="lock6" min="0" max="9" class="candado-input mt-auto">
                     </div>
                 </div>
 
@@ -396,7 +410,7 @@
     </div>
 
     <script>
-        // Funciones Generadoras de Tablas Gramaticales (Para ahorrar código)
+        // Funciones Generadoras de Tablas Gramaticales
         function buildNounTable(nomS, vocS, accS, genS, datS, ablS, nomP, vocP, accP, genP, datP, ablP) {
             return `<table class="w-full text-xs text-left text-slate-300 border-collapse border border-slate-700 mt-4 shadow-lg">
                 <thead class="bg-orange-950/70 text-orange-400">
@@ -430,65 +444,117 @@
             </table>`;
         }
 
-        // Texto de Plinio el Joven (Ep. 6.16)
+        const inv = '<p class="text-slate-400 text-sm mt-4 italic text-center border border-slate-700 bg-slate-800/50 p-2 rounded">Las palabras invariables (adverbios, conjunciones, preposiciones) no tienen cuadro de flexión.</p>';
+
         const latinText = "Hora septima mater mea avunculo indicat nubem inusitatam apparere. Ille, re mira visa, navem parari iubet ut naturam montis exploret; mox tamen epistulam accipit a Rectina, quae exterrita periculum magnum nuntiabat. Tum avunculus consilium mutat et, ubi periculum intellegit, auxilium ferre audet. Naves statim deducuntur et ille ad litus properat unde alii fugiunt. Cinis gravis iam incidebat, atque gubernator perterritus clamat: \"Fuge, domine!\". Sed Plinius, nullam formidinem ostendens, eum acriter hortatur: \"Fortes fortuna iuvat: flecte cursum ad Pomponianum statim!\". Ibi amicum suum trepidantem invenit, quem complexus consolatur. Nocte flammae ingentes ex monte lucent, sed ille in tanto periculo dormire solet. Postero die, sole prorsus obscurato, viri e domo exeunt. Cervicalia manibus capitibusque imponunt, ne lapidibus vulnerentur. Vento autem flante, spiritus eius a vapore crasso mox clauditur. Vir clarissimus ad terram cadit et prope mare moritur. Post tres dies corpus inventum est integrum, requiescenti similius.";
 
-        // Mega-Diccionario Manual Precargado con Flexión
+        // Mega-Diccionario Manual Precargado con Cobertura 100%
         const customDict = {
-            // Sustantivos 1ª Decl.
-            'hora': { enunciado: "hora, -ae, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Ablativo (C. Circunstancial Tiempo)", def: "la hora", etym: "Del gr. ὥρα", tabla: buildNounTable('hora','hora','horam','horae','horae','hora','horae','horae','horas','horarum','horis','horis') } },
-            'naturam': { enunciado: "natura, -ae, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Acusativo (C. Directo)", def: "la naturaleza", etym: "De nasci", tabla: buildNounTable('natura','natura','naturam','naturae','naturae','natura','naturae','naturae','naturas','naturarum','naturis','naturis') } },
-            'epistulam': { enunciado: "epistula, -ae, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Acusativo (C. Directo)", def: "la carta", etym: "Del gr. ἐπιστολή", tabla: buildNounTable('epistula','epistula','epistulam','epistulae','epistulae','epistula','epistulae','epistulae','epistulas','epistularum','epistulis','epistulis') } },
-            'flammae': { enunciado: "flamma, -ae, f", es: { morph: "Sustantivo, Fem, Plural", syntax: "Nominativo (Sujeto)", def: "las llamas", etym: "PIE *bʰlē-", tabla: buildNounTable('flamma','flamma','flammam','flammae','flammae','flamma','flammae','flammae','flammas','flammarum','flammis','flammis') } },
-            'fortuna': { enunciado: "fortuna, -ae, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Nominativo (Sujeto)", def: "la fortuna, la suerte", etym: "De fors, fortis", tabla: buildNounTable('fortuna','fortuna','fortunam','fortunae','fortunae','fortuna','fortunae','fortunae','fortunas','fortunarum','fortunis','fortunis') } },
-            'terram': { enunciado: "terra, -ae, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Acusativo (C.C. Dirección)", def: "la tierra", etym: "PIE *ters-", tabla: buildNounTable('terra','terra','terram','terrae','terrae','terra','terrae','terrae','terras','terrarum','terris','terris') } },
-            
-            // Sustantivos 2ª Decl.
-            'avunculo': { enunciado: "avunculus, -i, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Dativo (C. Indirecto)", def: "al tío materno", etym: "Diminutivo de avus", tabla: buildNounTable('avunculus','avuncule','avunculum','avunculi','avunculo','avunculo','avunculi','avunculi','avunculos','avunculorum','avunculis','avunculis') } },
-            'avunculus': { enunciado: "avunculus, -i, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Nominativo (Sujeto)", def: "el tío materno", etym: "Diminutivo de avus", tabla: buildNounTable('avunculus','avuncule','avunculum','avunculi','avunculo','avunculo','avunculi','avunculi','avunculos','avunculorum','avunculis','avunculis') } },
-            'periculum': { enunciado: "periculum, -i, n", es: { morph: "Sustantivo, Neutro, Sing", syntax: "Acusativo (C. Directo)", def: "el peligro", etym: "De periri", tabla: buildNounTable('periculum','periculum','periculum','periculi','periculo','periculo','pericula','pericula','pericula','periculorum','periculis','periculis') } },
-            'periculo': { enunciado: "periculum, -i, n", es: { morph: "Sustantivo, Neutro, Sing", syntax: "Ablativo (C. Circunstancial)", def: "el peligro", etym: "De periri", tabla: buildNounTable('periculum','periculum','periculum','periculi','periculo','periculo','pericula','pericula','pericula','periculorum','periculis','periculis') } },
-            'consilium': { enunciado: "consilium, -ii, n", es: { morph: "Sustantivo, Neutro, Sing", syntax: "Acusativo (C. Directo)", def: "el plan, consejo", etym: "De consulere", tabla: buildNounTable('consilium','consilium','consilium','consilii','consilio','consilio','consilia','consilia','consilia','consiliorum','consiliis','consiliis') } },
-            'auxilium': { enunciado: "auxilium, -ii, n", es: { morph: "Sustantivo, Neutro, Sing", syntax: "Acusativo (C. Directo)", def: "la ayuda", etym: "De augere", tabla: buildNounTable('auxilium','auxilium','auxilium','auxilii','auxilio','auxilio','auxilia','auxilia','auxilia','auxiliorum','auxiliis','auxiliis') } },
-            'gubernator': { enunciado: "gubernator, -oris, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Nominativo (Sujeto)", def: "el timonel, piloto", etym: "Del gr. κυβερνήτης", tabla: buildNounTable('gubernator','gubernator','gubernatorem','gubernatoris','gubernatori','gubernatore','gubernatores','gubernatores','gubernatores','gubernatorum','gubernatoribus','gubernatoribus') } },
-            'domine': { enunciado: "dominus, -i, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Vocativo (Apelación)", def: "¡señor!", etym: "De domus", tabla: buildNounTable('dominus','domine','dominum','domini','domino','domino','domini','domini','dominos','dominorum','dominis','dominis') } },
-            'amicum': { enunciado: "amicus, -i, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Acusativo (C. Directo)", def: "al amigo", etym: "De amare", tabla: buildNounTable('amicus','amice','amicum','amici','amico','amico','amici','amici','amicos','amicorum','amicis','amicis') } },
-            'viri': { enunciado: "vir, viri, m", es: { morph: "Sustantivo, Masc, Plural", syntax: "Nominativo (Sujeto)", def: "los hombres", etym: "PIE *wiHrós", tabla: buildNounTable('vir','vir','virum','viri','viro','viro','viri','viri','viros','virorum','viris','viris') } },
-            'vir': { enunciado: "vir, viri, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Nominativo (Sujeto)", def: "el hombre", etym: "PIE *wiHrós", tabla: buildNounTable('vir','vir','virum','viri','viro','viro','viri','viri','viros','virorum','viris','viris') } },
-            'vento': { enunciado: "ventus, -i, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Ablativo (Ablativo Absoluto)", def: "el viento", etym: "PIE *h₂wéh₁n̥ts", tabla: buildNounTable('ventus','vente','ventum','venti','vento','vento','venti','venti','ventos','ventorum','ventis','ventis') } },
+            // ================= INVARIABLES (Adverbios, Preposiciones, Conjunciones) =================
+            'ut': { enunciado: "ut", es: { morph: "Conjunción Subordinante", syntax: "Nexo (Final)", def: "para que", etym: "PIE *kuta", exp: "Introduce una oración final con el verbo en subjuntivo (exploret).", tabla: inv } },
+            'mox': { enunciado: "mox", es: { morph: "Adverbio", syntax: "C. Circunstancial de Tiempo", def: "pronto, luego", etym: "Desconocida", tabla: inv } },
+            'tamen': { enunciado: "tamen", es: { morph: "Adverbio / Conjunción", syntax: "Nexo Adversativo", def: "sin embargo", etym: "PIE *tam", tabla: inv } },
+            'a': { enunciado: "a / ab", es: { morph: "Preposición", syntax: "Preposición (rige ablativo)", def: "de, desde", exp: "Rige el ablativo 'Rectina'. Indica origen o procedencia.", etym: "PIE *apo", tabla: inv } },
+            'tum': { enunciado: "tum", es: { morph: "Adverbio", syntax: "C. Circunstancial de Tiempo", def: "entonces", etym: "PIE *to-", tabla: inv } },
+            'et': { enunciado: "et", es: { morph: "Conjunción Coordinante", syntax: "Nexo Copulativo", def: "y", etym: "PIE *eti", tabla: inv } },
+            'ubi': { enunciado: "ubi", es: { morph: "Adverbio / Conjunción", syntax: "Nexo (Temporal/Local)", def: "cuando, donde", exp: "Aquí actúa como nexo temporal ('cuando comprende...').", etym: "PIE *kwo-", tabla: inv } },
+            'statim': { enunciado: "statim", es: { morph: "Adverbio", syntax: "C. Circunstancial de Tiempo", def: "al instante, inmediatamente", etym: "De stare (estar de pie)", tabla: inv } },
+            'ad': { enunciado: "ad", es: { morph: "Preposición", syntax: "Preposición (rige acusativo)", def: "a, hacia", exp: "Rige el acusativo 'litus', indicando dirección.", etym: "PIE *ad-", tabla: inv } },
+            'unde': { enunciado: "unde", es: { morph: "Adverbio Relativo", syntax: "C.C. de Origen", def: "de donde", etym: "PIE *kwo-", tabla: inv } },
+            'iam': { enunciado: "iam", es: { morph: "Adverbio", syntax: "C. Circunstancial de Tiempo", def: "ya", etym: "PIE *yā-", tabla: inv } },
+            'atque': { enunciado: "atque", es: { morph: "Conjunción Coordinante", syntax: "Nexo Copulativo", def: "y además, y", etym: "De ad + que", tabla: inv } },
+            'sed': { enunciado: "sed", es: { morph: "Conjunción Coordinante", syntax: "Nexo Adversativo", def: "pero, sino", etym: "PIE *swe", tabla: inv } },
+            'acriter': { enunciado: "acriter", es: { morph: "Adverbio", syntax: "C. Circunstancial de Modo", def: "duramente, con energía", etym: "De acer (agudo, duro)", tabla: inv } },
+            'ibi': { enunciado: "ibi", es: { morph: "Adverbio", syntax: "C. Circunstancial de Lugar", def: "allí", etym: "PIE *i-", tabla: inv } },
+            'ex': { enunciado: "ex", es: { morph: "Preposición", syntax: "Preposición (rige ablativo)", def: "de, desde (el interior)", exp: "Rige el ablativo 'monte'.", etym: "PIE *eǵʰs", tabla: inv } },
+            'in': { enunciado: "in", es: { morph: "Preposición", syntax: "Preposición (rige ablativo o acusativo)", def: "en (lugar en donde)", exp: "Rige el ablativo 'periculo'.", etym: "PIE *en", tabla: inv } },
+            'prorsus': { enunciado: "prorsus", es: { morph: "Adverbio", syntax: "C. Circunstancial", def: "completamente, del todo", etym: "De pro + versus", tabla: inv } },
+            'e': { enunciado: "e / ex", es: { morph: "Preposición", syntax: "Preposición (rige ablativo)", def: "de, desde", exp: "Rige el ablativo 'domo'.", etym: "PIE *eǵʰs", tabla: inv } },
+            'ne': { enunciado: "ne", es: { morph: "Conjunción Subordinante", syntax: "Nexo (Final Negativo)", def: "para que no", exp: "Introduce oración final negativa con subjuntivo ('vulnerentur').", etym: "PIE *ne", tabla: inv } },
+            'autem': { enunciado: "autem", es: { morph: "Conjunción Coordinante", syntax: "Nexo Adversativo", def: "pero, sin embargo", etym: "PIE *h₂ew", tabla: inv } },
+            'prope': { enunciado: "prope", es: { morph: "Preposición", syntax: "Preposición (rige acusativo)", def: "cerca de", exp: "Rige el acusativo 'mare'.", etym: "Desconocida", tabla: inv } },
+            'post': { enunciado: "post", es: { morph: "Preposición", syntax: "Preposición (rige acusativo)", def: "después de", exp: "Rige el acusativo 'tres dies'.", etym: "PIE *pos", tabla: inv } },
 
-            // Sustantivos 3ª Decl.
-            'mater': { enunciado: "mater, matris, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Nominativo (Sujeto)", def: "la madre", etym: "PIE *méh₂tēr", tabla: buildNounTable('mater','mater','matrem','matris','matri','matre','matres','matres','matres','matrum','matribus','matribus') } },
-            'nubem': { enunciado: "nubes, nubis, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Acusativo (Sujeto de Or. Infinitivo)", def: "una nube", etym: "PIE *sneydʰ-", tabla: buildNounTable('nubes','nubes','nubem','nubis','nubi','nube','nubes','nubes','nubes','nubium','nubibus','nubibus') } },
-            'navem': { enunciado: "navis, navis, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Acusativo (Sujeto de Or. Infinitivo)", def: "la nave", etym: "PIE *néh₂ws", tabla: buildNounTable('navis','navis','navem','navis','navi','nave','naves','naves','naves','navium','navibus','navibus') } },
-            'naves': { enunciado: "navis, navis, f", es: { morph: "Sustantivo, Fem, Plural", syntax: "Nominativo (Sujeto Paciente)", def: "las naves", etym: "PIE *néh₂ws", tabla: buildNounTable('navis','navis','navem','navis','navi','nave','naves','naves','naves','navium','navibus','navibus') } },
-            'montis': { enunciado: "mons, montis, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Genitivo (C. del Nombre)", def: "del monte", etym: "PIE *men-", tabla: buildNounTable('mons','mons','montem','montis','monti','monte','montes','montes','montes','montium','montibus','montibus') } },
-            'monte': { enunciado: "mons, montis, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Ablativo (C. Circunstancial)", def: "el monte", etym: "PIE *men-", tabla: buildNounTable('mons','mons','montem','montis','monti','monte','montes','montes','montes','montium','montibus','montibus') } },
-            'litus': { enunciado: "litus, litoris, n", es: { morph: "Sustantivo, Neutro, Sing", syntax: "Acusativo (C.C. Dirección)", def: "la costa, playa", etym: "Desconocida", tabla: buildNounTable('litus','litus','litus','litoris','litori','litore','litora','litora','litora','litorum','litoribus','litoribus') } },
-            'cinis': { enunciado: "cinis, cineris, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Nominativo (Sujeto)", def: "la ceniza", etym: "PIE *ken-", tabla: buildNounTable('cinis','cinis','cinerem','cineris','cineri','cinere','cineres','cineres','cineres','cinerum','cineribus','cineribus') } },
-            'formidinem': { enunciado: "formido, -inis, f", es: { morph: "Sustantivo, Fem, Sing", syntax: "Acusativo (C. Directo)", def: "el miedo, terror", etym: "De formidare", tabla: buildNounTable('formido','formido','formidinem','formidinis','formidini','formidine','formidines','formidines','formidines','formidinum','formidinibus','formidinibus') } },
-            'sole': { enunciado: "sol, solis, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Ablativo (Ablativo Absoluto)", def: "el sol", etym: "PIE *sóh₂wl̥", tabla: buildNounTable('sol','sol','solem','solis','soli','sole','soles','soles','soles','solum','solibus','solibus') } },
-            'capitibusque': { enunciado: "caput, -itis, n", es: { morph: "Sustantivo, Neut, Plural + que", syntax: "Dativo (C. Indirecto / Régimen)", def: "y en las cabezas", etym: "PIE *kap-", tabla: buildNounTable('caput','caput','caput','capitis','capiti','capite','capita','capita','capita','capitum','capitibus','capitibus') } },
-            'lapidibus': { enunciado: "lapis, -idis, m", es: { morph: "Sustantivo, Masc, Plural", syntax: "Ablativo (C. Agente / Causa)", def: "por las piedras", etym: "PIE *lep-", tabla: buildNounTable('lapis','lapis','lapidem','lapidis','lapidi','lapide','lapides','lapides','lapides','lapidum','lapidibus','lapidibus') } },
-            'vapore': { enunciado: "vapor, -oris, m", es: { morph: "Sustantivo, Masc, Sing", syntax: "Ablativo (C. Agente / Causa)", def: "el vapor, gas", etym: "PIE *kwep-", tabla: buildNounTable('vapor','vapor','vaporem','vaporis','vapori','vapore','vapores','vapores','vapores','vaporum','vaporibus','vaporibus') } },
-            'mare': { enunciado: "mare, maris, n", es: { morph: "Sustantivo, Neutro, Sing", syntax: "Acusativo (Regido por prope)", def: "el mar", etym: "PIE *móri", tabla: buildNounTable('mare','mare','mare','maris','mari','mari','maria','maria','maria','marium','maribus','maribus') } },
-            'corpus': { enunciado: "corpus, corporis, n", es: { morph: "Sustantivo, Neutro, Sing", syntax: "Nominativo (Sujeto Paciente)", def: "el cuerpo", etym: "PIE *krep-", tabla: buildNounTable('corpus','corpus','corpus','corporis','corpori','corpore','corpora','corpora','corpora','corporum','corporibus','corporibus') } },
-
-            // Sustantivos 4ª y 5ª Decl.
-            'cursum': { enunciado: "cursus, -us, m", es: { morph: "Sustantivo (4ª), Masc, Sing", syntax: "Acusativo (C. Directo)", def: "el rumbo, curso", etym: "De currere", tabla: buildNounTable('cursus','cursus','cursum','cursus','cursui','cursu','cursus','cursus','cursus','cursuum','cursibus','cursibus') } },
-            'domo': { enunciado: "domus, -us, f", es: { morph: "Sustantivo (4ª/2ª), Fem, Sing", syntax: "Ablativo (C.C. Origen)", def: "la casa", etym: "PIE *dṓm", tabla: buildNounTable('domus','domus','domum','domus','domui','domo','domus','domus','domos','domuum','domibus','domibus') } },
-            'manibus': { enunciado: "manus, -us, f", es: { morph: "Sustantivo (4ª), Fem, Plural", syntax: "Ablativo (C.C. Instrumento)", def: "con las manos", etym: "PIE *meh₂-r-", tabla: buildNounTable('manus','manus','manum','manus','manui','manu','manus','manus','manus','manuum','manibus','manibus') } },
-            'spiritus': { enunciado: "spiritus, -us, m", es: { morph: "Sustantivo (4ª), Masc, Sing", syntax: "Nominativo (Sujeto)", def: "la respiración, aliento", etym: "De spirare", tabla: buildNounTable('spiritus','spiritus','spiritum','spiritus','spiritui','spiritu','spiritus','spiritus','spiritus','spirituum','spiritibus','spiritibus') } },
+            // ================= SUSTANTIVOS =================
+            'hora': { enunciado: "hora, -ae, f", es: { morph: "Sustantivo (1ª), Fem, Sing", syntax: "Ablativo (C.C. de Tiempo)", def: "la hora", etym: "Del gr. ὥρα", tabla: buildNounTable('hora','hora','horam','horae','horae','hora','horae','horae','horas','horarum','horis','horis') } },
+            'mater': { enunciado: "mater, matris, f", es: { morph: "Sustantivo (3ª), Fem, Sing", syntax: "Nominativo (Sujeto)", def: "la madre", etym: "PIE *méh₂tēr", tabla: buildNounTable('mater','mater','matrem','matris','matri','matre','matres','matres','matres','matrum','matribus','matribus') } },
+            'avunculo': { enunciado: "avunculus, -i, m", es: { morph: "Sustantivo (2ª), Masc, Sing", syntax: "Dativo (C. Indirecto)", def: "al tío materno", etym: "Diminutivo de avus", tabla: buildNounTable('avunculus','avuncule','avunculum','avunculi','avunculo','avunculo','avunculi','avunculi','avunculos','avunculorum','avunculis','avunculis') } },
+            'nubem': { enunciado: "nubes, nubis, f", es: { morph: "Sustantivo (3ª), Fem, Sing", syntax: "Acusativo (Sujeto de Or. Infinitivo)", def: "una nube", etym: "PIE *sneydʰ-", tabla: buildNounTable('nubes','nubes','nubem','nubis','nubi','nube','nubes','nubes','nubes','nubium','nubibus','nubibus') } },
             're': { enunciado: "res, rei, f", es: { morph: "Sustantivo (5ª), Fem, Sing", syntax: "Ablativo (Ablativo Absoluto)", def: "la cosa, situación", etym: "PIE *reH₁ís", tabla: buildNounTable('res','res','rem','rei','rei','re','res','res','res','rerum','rebus','rebus') } },
+            'navem': { enunciado: "navis, navis, f", es: { morph: "Sustantivo (3ª), Fem, Sing", syntax: "Acusativo (Sujeto de Or. Infinitivo)", def: "la nave", etym: "PIE *néh₂ws", tabla: buildNounTable('navis','navis','navem','navis','navi','nave','naves','naves','naves','navium','navibus','navibus') } },
+            'naturam': { enunciado: "natura, -ae, f", es: { morph: "Sustantivo (1ª), Fem, Sing", syntax: "Acusativo (C. Directo)", def: "la naturaleza", etym: "De nasci", tabla: buildNounTable('natura','natura','naturam','naturae','naturae','natura','naturae','naturae','naturas','naturarum','naturis','naturis') } },
+            'montis': { enunciado: "mons, montis, m", es: { morph: "Sustantivo (3ª), Masc, Sing", syntax: "Genitivo (C. del Nombre)", def: "del monte", etym: "PIE *men-", tabla: buildNounTable('mons','mons','montem','montis','monti','monte','montes','montes','montes','montium','montibus','montibus') } },
+            'epistulam': { enunciado: "epistula, -ae, f", es: { morph: "Sustantivo (1ª), Fem, Sing", syntax: "Acusativo (C. Directo)", def: "la carta", etym: "Del gr. ἐπιστολή", tabla: buildNounTable('epistula','epistula','epistulam','epistulae','epistulae','epistula','epistulae','epistulae','epistulas','epistularum','epistulis','epistulis') } },
+            'rectina': { enunciado: "Rectina, -ae, f", es: { morph: "Sustantivo Propio (1ª), Fem, Sing", syntax: "Ablativo (Regido por 'a')", def: "Rectina (nombre de mujer)", etym: "Nombre propio", tabla: buildNounTable('Rectina','Rectina','Rectinam','Rectinae','Rectinae','Rectina','-','-','-','-','-','-') } },
+            'periculum': { enunciado: "periculum, -i, n", es: { morph: "Sustantivo (2ª), Neutro, Sing", syntax: "Acusativo (C. Directo)", def: "el peligro", etym: "De periri", tabla: buildNounTable('periculum','periculum','periculum','periculi','periculo','periculo','pericula','pericula','pericula','periculorum','periculis','periculis') } },
+            'avunculus': { enunciado: "avunculus, -i, m", es: { morph: "Sustantivo (2ª), Masc, Sing", syntax: "Nominativo (Sujeto)", def: "el tío materno", etym: "Diminutivo de avus", tabla: buildNounTable('avunculus','avuncule','avunculum','avunculi','avunculo','avunculo','avunculi','avunculi','avunculos','avunculorum','avunculis','avunculis') } },
+            'consilium': { enunciado: "consilium, -ii, n", es: { morph: "Sustantivo (2ª), Neutro, Sing", syntax: "Acusativo (C. Directo)", def: "el plan, consejo", etym: "De consulere", tabla: buildNounTable('consilium','consilium','consilium','consilii','consilio','consilio','consilia','consilia','consilia','consiliorum','consiliis','consiliis') } },
+            'auxilium': { enunciado: "auxilium, -ii, n", es: { morph: "Sustantivo (2ª), Neutro, Sing", syntax: "Acusativo (C. Directo)", def: "la ayuda", etym: "De augere", tabla: buildNounTable('auxilium','auxilium','auxilium','auxilii','auxilio','auxilio','auxilia','auxilia','auxilia','auxiliorum','auxiliis','auxiliis') } },
+            'naves': { enunciado: "navis, navis, f", es: { morph: "Sustantivo (3ª), Fem, Plural", syntax: "Nominativo (Sujeto Paciente)", def: "las naves", etym: "PIE *néh₂ws", tabla: buildNounTable('navis','navis','navem','navis','navi','nave','naves','naves','naves','navium','navibus','navibus') } },
+            'litus': { enunciado: "litus, litoris, n", es: { morph: "Sustantivo (3ª), Neutro, Sing", syntax: "Acusativo (C.C. Dirección)", def: "la costa, playa", etym: "Desconocida", tabla: buildNounTable('litus','litus','litus','litoris','litori','litore','litora','litora','litora','litorum','litoribus','litoribus') } },
+            'cinis': { enunciado: "cinis, cineris, m", es: { morph: "Sustantivo (3ª), Masc, Sing", syntax: "Nominativo (Sujeto)", def: "la ceniza", etym: "PIE *ken-", tabla: buildNounTable('cinis','cinis','cinerem','cineris','cineri','cinere','cineres','cineres','cineres','cinerum','cineribus','cineribus') } },
+            'gubernator': { enunciado: "gubernator, -oris, m", es: { morph: "Sustantivo (3ª), Masc, Sing", syntax: "Nominativo (Sujeto)", def: "el timonel, piloto", etym: "Del gr. κυβερνήτης", tabla: buildNounTable('gubernator','gubernator','gubernatorem','gubernatoris','gubernatori','gubernatore','gubernatores','gubernatores','gubernatores','gubernatorum','gubernatoribus','gubernatoribus') } },
+            'domine': { enunciado: "dominus, -i, m", es: { morph: "Sustantivo (2ª), Masc, Sing", syntax: "Vocativo (Apelación)", def: "¡señor!", etym: "De domus", tabla: buildNounTable('dominus','domine','dominum','domini','domino','domino','domini','domini','dominos','dominorum','dominis','dominis') } },
+            'plinius': { enunciado: "Plinius, -ii, m", es: { morph: "Sustantivo Propio (2ª), Masc, Sing", syntax: "Nominativo (Sujeto)", def: "Plinio", etym: "Nombre gentilicio", tabla: buildNounTable('Plinius','Plini','Plinium','Plinii','Plinio','Plinio','-','-','-','-','-','-') } },
+            'formidinem': { enunciado: "formido, -inis, f", es: { morph: "Sustantivo (3ª), Fem, Sing", syntax: "Acusativo (C. Directo)", def: "el miedo, terror", etym: "De formidare", tabla: buildNounTable('formido','formido','formidinem','formidinis','formidini','formidine','formidines','formidines','formidines','formidinum','formidinibus','formidinibus') } },
+            'fortuna': { enunciado: "fortuna, -ae, f", es: { morph: "Sustantivo (1ª), Fem, Sing", syntax: "Nominativo (Sujeto)", def: "la fortuna, la suerte", etym: "De fors, fortis", tabla: buildNounTable('fortuna','fortuna','fortunam','fortunae','fortunae','fortuna','fortunae','fortunae','fortunas','fortunarum','fortunis','fortunis') } },
+            'cursum': { enunciado: "cursus, -us, m", es: { morph: "Sustantivo (4ª), Masc, Sing", syntax: "Acusativo (C. Directo)", def: "el rumbo, curso", etym: "De currere", tabla: buildNounTable('cursus','cursus','cursum','cursus','cursui','cursu','cursus','cursus','cursus','cursuum','cursibus','cursibus') } },
+            'pomponianum': { enunciado: "Pomponianus, -i, m", es: { morph: "Sustantivo Propio (2ª), Masc, Sing", syntax: "Acusativo (C.C. Dirección)", def: "hacia (la villa de) Pomponiano", etym: "Nombre propio", tabla: buildNounTable('Pomponianus','Pomponiane','Pomponianum','Pomponiani','Pomponiano','Pomponiano','-','-','-','-','-','-') } },
+            'amicum': { enunciado: "amicus, -i, m", es: { morph: "Sustantivo (2ª), Masc, Sing", syntax: "Acusativo (C. Directo)", def: "al amigo", etym: "De amare", tabla: buildNounTable('amicus','amice','amicum','amici','amico','amico','amici','amici','amicos','amicorum','amicis','amicis') } },
+            'nocte': { enunciado: "nox, noctis, f", es: { morph: "Sustantivo (3ª), Fem, Sing", syntax: "Ablativo (C.C. de Tiempo)", def: "por la noche", etym: "PIE *nokwt-", tabla: buildNounTable('nox','nox','noctem','noctis','nocti','nocte','noctes','noctes','noctes','noctium','noctibus','noctibus') } },
+            'flammae': { enunciado: "flamma, -ae, f", es: { morph: "Sustantivo (1ª), Fem, Plural", syntax: "Nominativo (Sujeto)", def: "las llamas", etym: "PIE *bʰlē-", tabla: buildNounTable('flamma','flamma','flammam','flammae','flammae','flamma','flammae','flammae','flammas','flammarum','flammis','flammis') } },
+            'monte': { enunciado: "mons, montis, m", es: { morph: "Sustantivo (3ª), Masc, Sing", syntax: "Ablativo (C. Circunstancial de Lugar)", def: "el monte", etym: "PIE *men-", tabla: buildNounTable('mons','mons','montem','montis','monti','monte','montes','montes','montes','montium','montibus','montibus') } },
+            'periculo': { enunciado: "periculum, -i, n", es: { morph: "Sustantivo (2ª), Neutro, Sing", syntax: "Ablativo (C. Circunstancial)", def: "el peligro", etym: "De periri", tabla: buildNounTable('periculum','periculum','periculum','periculi','periculo','periculo','pericula','pericula','pericula','periculorum','periculis','periculis') } },
             'die': { enunciado: "dies, diei, m/f", es: { morph: "Sustantivo (5ª), Masc, Sing", syntax: "Ablativo (C.C. Tiempo)", def: "al (siguiente) día", etym: "PIE *dyew-", tabla: buildNounTable('dies','dies','diem','diei','diei','die','dies','dies','dies','dierum','diebus','diebus') } },
+            'sole': { enunciado: "sol, solis, m", es: { morph: "Sustantivo (3ª), Masc, Sing", syntax: "Ablativo (Sujeto de Ablativo Absoluto)", def: "el sol", etym: "PIE *sóh₂wl̥", tabla: buildNounTable('sol','sol','solem','solis','soli','sole','soles','soles','soles','solum','solibus','solibus') } },
+            'viri': { enunciado: "vir, viri, m", es: { morph: "Sustantivo (2ª), Masc, Plural", syntax: "Nominativo (Sujeto)", def: "los hombres", etym: "PIE *wiHrós", tabla: buildNounTable('vir','vir','virum','viri','viro','viro','viri','viri','viros','virorum','viris','viris') } },
+            'domo': { enunciado: "domus, -us, f", es: { morph: "Sustantivo (4ª/2ª), Fem, Sing", syntax: "Ablativo (C.C. Origen)", def: "la casa", etym: "PIE *dṓm", tabla: buildNounTable('domus','domus','domum','domus','domui','domo','domus','domus','domos','domuum','domibus','domibus') } },
+            'cervicalia': { enunciado: "cervical, cervicalis, n", es: { morph: "Sustantivo (3ª), Neutro, Plural", syntax: "Acusativo (C. Directo)", def: "las almohadas", etym: "De cervix", tabla: buildNounTable('cervical','cervical','cervical','cervicalis','cervicali','cervicali','cervicalia','cervicalia','cervicalia','cervicalium','cervicalibus','cervicalibus') } },
+            'manibus': { enunciado: "manus, -us, f", es: { morph: "Sustantivo (4ª), Fem, Plural", syntax: "Ablativo (C.C. Instrumento)", def: "con las manos", etym: "PIE *meh₂-r-", tabla: buildNounTable('manus','manus','manum','manus','manui','manu','manus','manus','manus','manuum','manibus','manibus') } },
+            'capitibusque': { enunciado: "caput, -itis, n", es: { morph: "Sustantivo (3ª), Neut, Plural + enclítica '-que'", syntax: "Dativo (C. Indirecto / Régimen)", def: "y en las cabezas", exp: "Contiene la conjunción enclítica copulativa -que al final.", etym: "PIE *kap-", tabla: buildNounTable('caput','caput','caput','capitis','capiti','capite','capita','capita','capita','capitum','capitibus','capitibus') } },
+            'lapidibus': { enunciado: "lapis, -idis, m", es: { morph: "Sustantivo (3ª), Masc, Plural", syntax: "Ablativo (C. Agente / Causa)", def: "por las piedras", etym: "PIE *lep-", tabla: buildNounTable('lapis','lapis','lapidem','lapidis','lapidi','lapide','lapides','lapides','lapides','lapidum','lapidibus','lapidibus') } },
+            'vento': { enunciado: "ventus, -i, m", es: { morph: "Sustantivo (2ª), Masc, Sing", syntax: "Ablativo (Ablativo Absoluto)", def: "el viento", etym: "PIE *h₂wéh₁n̥ts", tabla: buildNounTable('ventus','vente','ventum','venti','vento','vento','venti','venti','ventos','ventorum','ventis','ventis') } },
+            'spiritus': { enunciado: "spiritus, -us, m", es: { morph: "Sustantivo (4ª), Masc, Sing", syntax: "Nominativo (Sujeto Paciente)", def: "la respiración, aliento", etym: "De spirare", tabla: buildNounTable('spiritus','spiritus','spiritum','spiritus','spiritui','spiritu','spiritus','spiritus','spiritus','spirituum','spiritibus','spiritibus') } },
+            'vapore': { enunciado: "vapor, -oris, m", es: { morph: "Sustantivo (3ª), Masc, Sing", syntax: "Ablativo (C. Agente / Causa)", def: "el vapor, gas", etym: "PIE *kwep-", tabla: buildNounTable('vapor','vapor','vaporem','vaporis','vapori','vapore','vapores','vapores','vapores','vaporum','vaporibus','vaporibus') } },
+            'vir': { enunciado: "vir, viri, m", es: { morph: "Sustantivo (2ª), Masc, Sing", syntax: "Nominativo (Sujeto)", def: "el hombre", etym: "PIE *wiHrós", tabla: buildNounTable('vir','vir','virum','viri','viro','viro','viri','viri','viros','virorum','viris','viris') } },
+            'terram': { enunciado: "terra, -ae, f", es: { morph: "Sustantivo (1ª), Fem, Sing", syntax: "Acusativo (C.C. Dirección)", def: "la tierra", etym: "PIE *ters-", tabla: buildNounTable('terra','terra','terram','terrae','terrae','terra','terrae','terrae','terras','terrarum','terris','terris') } },
+            'mare': { enunciado: "mare, maris, n", es: { morph: "Sustantivo (3ª), Neutro, Sing", syntax: "Acusativo (Regido por 'prope')", def: "el mar", etym: "PIE *móri", tabla: buildNounTable('mare','mare','mare','maris','mari','mari','maria','maria','maria','marium','maribus','maribus') } },
             'dies': { enunciado: "dies, diei, m/f", es: { morph: "Sustantivo (5ª), Masc, Plural", syntax: "Acusativo (C.C. Extensión Tiempo)", def: "los días", etym: "PIE *dyew-", tabla: buildNounTable('dies','dies','diem','diei','diei','die','dies','dies','dies','dierum','diebus','diebus') } },
+            'corpus': { enunciado: "corpus, corporis, n", es: { morph: "Sustantivo (3ª), Neutro, Sing", syntax: "Nominativo (Sujeto Paciente)", def: "el cuerpo", etym: "PIE *krep-", tabla: buildNounTable('corpus','corpus','corpus','corporis','corpori','corpore','corpora','corpora','corpora','corporum','corporibus','corporibus') } },
 
-            // Verbos Regulares
+            // ================= ADJETIVOS =================
+            'septima': { enunciado: "septimus, -a, -um", es: { morph: "Adjetivo Numeral, Fem, Sing", syntax: "Ablativo (Adyacente de hora)", def: "séptima", etym: "De septem", tabla: buildNounTable('septima','septima','septimam','septimae','septimae','septima','septimae','septimae','septimas','septimarum','septimis','septimis') } },
+            'mea': { enunciado: "meus, -a, -um", es: { morph: "Adjetivo Posesivo, Fem, Sing", syntax: "Nominativo (Adyacente de mater)", def: "mía, mi", etym: "PIE *mey-", tabla: buildNounTable('mea','mea','meam','meae','meae','mea','meae','meae','meas','mearum','meis','meis') } },
+            'inusitatam': { enunciado: "inusitatus, -a, -um", es: { morph: "Adjetivo, Fem, Sing", syntax: "Acusativo (Adyacente de nubem)", def: "inusual, insólita", etym: "De in + usitatus", tabla: buildNounTable('inusitata','inusitata','inusitatam','inusitatae','inusitatae','inusitata','inusitatae','inusitatae','inusitatas','inusitatarum','inusitatis','inusitatis') } },
+            'mira': { enunciado: "mirus, -a, -um", es: { morph: "Adjetivo, Fem, Sing", syntax: "Ablativo (Adyacente de re)", def: "asombrosa, admirable", etym: "De mirari", tabla: buildNounTable('mira','mira','miram','mirae','mirae','mira','mirae','mirae','miras','mirarum','miris','miris') } },
+            'magnum': { enunciado: "magnus, -a, -um", es: { morph: "Adjetivo, Neutro, Sing", syntax: "Acusativo (Adyacente de periculum)", def: "grande", etym: "PIE *meǵh₂s", tabla: buildNounTable('magnum','magnum','magnum','magni','magno','magno','magna','magna','magna','magnorum','magnis','magnis') } },
+            'gravis': { enunciado: "gravis, -e", es: { morph: "Adjetivo (3ª decl), Masc, Sing", syntax: "Nominativo (Adyacente de cinis)", def: "pesada, grave", etym: "PIE *gʷréh₂us", tabla: buildNounTable('gravis','gravis','gravem','gravis','gravi','gravi','graves','graves','graves','gravium','gravibus','gravibus') } },
+            'nullam': { enunciado: "nullus, -a, -um", es: { morph: "Adjetivo Pronominal, Fem, Sing", syntax: "Acusativo (Adyacente de formidinem)", def: "ninguna", etym: "De ne + ullus", tabla: buildNounTable('nulla','nulla','nullam','nullius','nulli','nulla','nullae','nullae','nullas','nullarum','nullis','nullis') } },
+            'fortes': { enunciado: "fortis, -e", es: { morph: "Adjetivo (3ª decl) sustantivado, Masc, Pl", syntax: "Acusativo (C. Directo)", def: "a los valientes, a los fuertes", etym: "PIE *bʰerǵʰ-", tabla: buildNounTable('fortis','fortis','fortem','fortis','forti','forte','fortes','fortes','fortes','fortium','fortibus','fortibus') } },
+            'suum': { enunciado: "suus, -a, -um", es: { morph: "Adjetivo Posesivo, Masc, Sing", syntax: "Acusativo (Adyacente de amicum)", def: "su, suyo", etym: "PIE *swo-", tabla: buildNounTable('suus','sue','suum','sui','suo','suo','sui','sui','suos','suorum','suis','suis') } },
+            'ingentes': { enunciado: "ingens, -ntis", es: { morph: "Adjetivo (3ª decl), Fem, Plural", syntax: "Nominativo (Adyacente de flammae)", def: "enormes, inmensas", etym: "De in + gens", tabla: buildNounTable('ingens','ingens','ingentem','ingentis','ingenti','ingenti/e','ingentes','ingentes','ingentes','ingentium','ingentibus','ingentibus') } },
+            'tanto': { enunciado: "tantus, -a, -um", es: { morph: "Adjetivo, Neutro, Sing", syntax: "Ablativo (Adyacente de periculo)", def: "tan gran, tanto", etym: "PIE *to-", tabla: buildNounTable('tantum','tantum','tantum','tanti','tanto','tanto','tanta','tanta','tanta','tantorum','tantis','tantis') } },
+            'postero': { enunciado: "posterus, -a, -um", es: { morph: "Adjetivo, Masc, Sing", syntax: "Ablativo (Adyacente de die)", def: "al siguiente", etym: "De post", tabla: buildNounTable('posterus','postere','posterum','posteri','postero','postero','posteri','posteri','posteros','posterorum','posteris','posteris') } },
+            'crasso': { enunciado: "crassus, -a, -um", es: { morph: "Adjetivo, Masc, Sing", syntax: "Ablativo (Adyacente de vapore)", def: "denso, grueso", etym: "PIE *kars-", tabla: buildNounTable('crassus','crasse','crassum','crassi','crasso','crasso','crassi','crassi','crassos','crassorum','crassis','crassis') } },
+            'clarissimus': { enunciado: "clarus, -a, -um (Superlativo)", es: { morph: "Adjetivo Superlativo, Masc, Sing", syntax: "Nominativo (Adyacente de vir)", def: "ilustrísimo, muy famoso", etym: "PIE *kelh₁-", tabla: buildNounTable('clarissimus','clarissime','clarissimum','clarissimi','clarissimo','clarissimo','clarissimi','clarissimi','clarissimos','clarissimorum','clarissimis','clarissimis') } },
+            'integrum': { enunciado: "integer, -gra, -grum", es: { morph: "Adjetivo, Neutro, Sing", syntax: "Nominativo (Predicativo / Atributo)", def: "intacto, íntegro", etym: "De in + tangere", tabla: buildNounTable('integer','integer','integrum','integri','integro','integro','integri','integri','integros','integrorum','integris','integris') } },
+            'similius': { enunciado: "similis, -e (Comparativo)", es: { morph: "Adjetivo Comparativo, Neutro, Sing", syntax: "Nominativo (Predicativo)", def: "más parecido", exp: "Rige caso Dativo (requiescenti).", etym: "PIE *sem-", tabla: buildNounTable('similius','similius','similius','similioris','similiori','similiore','similiora','similiora','similiora','similiorum','similioribus','similioribus') } },
+            'tres': { enunciado: "tres, tria", es: { morph: "Adjetivo Numeral (3ª), Masc, Plural", syntax: "Acusativo (Adyacente de dies)", def: "tres", etym: "PIE *tréyes", tabla: buildNounTable('-','-','-','-','-','-','tres','tres','tres','trium','tribus','tribus') } },
+
+            // ================= PRONOMBRES =================
+            'ille': { enunciado: "ille, illa, illud", es: { morph: "Pronombre Demostrativo, Masc, Sing", syntax: "Nominativo (Sujeto)", def: "aquel, él (Plinio)", etym: "Latín arcaico olle", tabla: buildNounTable('ille','-','illum','illius','illi','illo','illi','-','illos','illorum','illis','illis') } },
+            'quae': { enunciado: "qui, quae, quod", es: { morph: "Pronombre Relativo, Fem, Sing", syntax: "Nominativo (Sujeto)", def: "la cual, quien (Rectina)", etym: "PIE *kwi-", tabla: buildNounTable('quae','-','quam','cuius','cui','qua','quae','-','quas','quarum','quibus','quibus') } },
+            'alii': { enunciado: "alius, -a, -ud", es: { morph: "Pronombre Indefinido, Masc, Pl", syntax: "Nominativo (Sujeto)", def: "otros", etym: "PIE *al-", tabla: buildNounTable('alius','-','alium','alius','alii','alio','alii','-','alios','aliorum','aliis','aliis') } },
+            'eum': { enunciado: "is, ea, id", es: { morph: "Pronombre Demostrativo, Masc, Sing", syntax: "Acusativo (C. Directo)", def: "a él", etym: "PIE *i-", tabla: buildNounTable('is','-','eum','eius','ei','eo','ii / ei','-','eos','eorum','eis / iis','eis / iis') } },
+            'quem': { enunciado: "qui, quae, quod", es: { morph: "Pronombre Relativo, Masc, Sing", syntax: "Acusativo (C. Directo)", def: "al cual, a quien", etym: "PIE *kwi-", tabla: buildNounTable('qui','-','quem','cuius','cui','quo','qui','-','quos','quorum','quibus','quibus') } },
+            'eius': { enunciado: "is, ea, id", es: { morph: "Pronombre Demostrativo, Masc, Sing", syntax: "Genitivo (C. del Nombre)", def: "su (de él)", etym: "PIE *i-", tabla: buildNounTable('is','-','eum','eius','ei','eo','ii / ei','-','eos','eorum','eis / iis','eis / iis') } },
+
+            // ================= VERBOS INDICATIVO / SUBJUNTIVO =================
             'indicat': { enunciado: "indico, -are", es: { morph: "Verbo (1ª conj), 3ª sg, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "indica, señala", etym: "De in- + dico", tabla: buildVerbTable('indico','indicas','indicat','indicamus','indicatis','indicant','Pres. Ind. Activo') } },
             'iubet': { enunciado: "iubeo, -ere", es: { morph: "Verbo (2ª conj), 3ª sg, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "ordena, manda", etym: "PIE *yowdʰ-", tabla: buildVerbTable('iubeo','iubes','iubet','iubemus','iubetis','iubent','Pres. Ind. Activo') } },
             'exploret': { enunciado: "exploro, -are", es: { morph: "Verbo (1ª conj), 3ª sg, Pres. Subj. Activo", syntax: "Núcleo (Oración Final)", def: "para que explore", etym: "De ex- + plorare", tabla: buildVerbTable('explorem','explores','exploret','exploremus','exploretis','explorent','Pres. Subj. Activo') } },
-            'accipit': { enunciado: "accipio, -ere", es: { morph: "Verbo (3ª conj mixta), 3ª sg, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "recibe", etym: "De ad- + capio", tabla: buildVerbTable('accipio','accipis','accipit','accipimus','accipitis','accipiunt','Pres. Ind. Activo') } },
-            'nuntiabat': { enunciado: "nuntio, -are", es: { morph: "Verbo (1ª conj), 3ª sg, Pret. Imperfecto Ind.", syntax: "Núcleo (Or. de Relativo)", def: "anunciaba", etym: "De nuntius", tabla: buildVerbTable('nuntiabam','nuntiabas','nuntiabat','nuntiabamus','nuntiabatis','nuntiabant','Pret. Imp. Activo') } },
+            'accipit': { enunciado: "accipio, -ere", es: { morph: "Verbo (3ª mixta), 3ª sg, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "recibe", etym: "De ad- + capio", tabla: buildVerbTable('accipio','accipis','accipit','accipimus','accipitis','accipiunt','Pres. Ind. Activo') } },
+            'nuntiabat': { enunciado: "nuntio, -are", es: { morph: "Verbo (1ª conj), 3ª sg, Pret. Imperfecto Ind.", syntax: "Núcleo (Or. Relativo)", def: "anunciaba", etym: "De nuntius", tabla: buildVerbTable('nuntiabam','nuntiabas','nuntiabat','nuntiabamus','nuntiabatis','nuntiabant','Pret. Imp. Activo') } },
             'mutat': { enunciado: "muto, -are", es: { morph: "Verbo (1ª conj), 3ª sg, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "cambia", etym: "PIE *mey-", tabla: buildVerbTable('muto','mutas','mutat','mutamus','mutatis','mutant','Pres. Ind. Activo') } },
             'intellegit': { enunciado: "intellego, -ere", es: { morph: "Verbo (3ª conj), 3ª sg, Pres. Ind. Activo", syntax: "Núcleo (Or. Temporal)", def: "comprende", etym: "De inter- + lego", tabla: buildVerbTable('intellego','intellegis','intellegit','intellegimus','intellegitis','intellegunt','Pres. Ind. Activo') } },
             'deducuntur': { enunciado: "deduco, -ere", es: { morph: "Verbo (3ª conj), 3ª pl, Pres. Ind. Pasivo", syntax: "Núcleo del Predicado", def: "son botadas (al mar)", etym: "De de- + duco", tabla: buildVerbTable('deducor','deduceris','deducitur','deducimur','deducimini','deducuntur','Pres. Ind. Pasivo') } },
@@ -500,63 +566,38 @@
             'invenit': { enunciado: "invenio, -ire", es: { morph: "Verbo (4ª conj), 3ª sg, Pres/Perf Ind.", syntax: "Núcleo del Predicado", def: "encuentra / encontró", etym: "De in- + venio", tabla: buildVerbTable('invenio','invenis','invenit','invenimus','invenitis','inveniunt','Pres. Ind. Activo') } },
             'lucent': { enunciado: "luceo, -ere", es: { morph: "Verbo (2ª conj), 3ª pl, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "brillan", etym: "PIE *lewk-", tabla: buildVerbTable('luceo','luces','lucet','lucemus','lucetis','lucent','Pres. Ind. Activo') } },
             'imponunt': { enunciado: "impono, -ere", es: { morph: "Verbo (3ª conj), 3ª pl, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "colocan, imponen", etym: "De in- + pono", tabla: buildVerbTable('impono','imponis','imponit','imponimus','imponitis','imponunt','Pres. Ind. Activo') } },
-            'vulnerentur': { enunciado: "vulnero, -are", es: { morph: "Verbo (1ª conj), 3ª pl, Pres. Subj. Pasivo", syntax: "Núcleo (Or. Final Negativa)", def: "para no ser heridos", etym: "De vulnus", tabla: buildVerbTable('vulnerer','vulnereris','vulneretur','vulneremur','vulneremini','vulnerentur','Pres. Subj. Pasivo') } },
+            'vulnerentur': { enunciado: "vulnero, -are", es: { morph: "Verbo (1ª conj), 3ª pl, Pres. Subj. Pasivo", syntax: "Núcleo (Or. Final)", def: "para no ser heridos", etym: "De vulnus", tabla: buildVerbTable('vulnerer','vulnereris','vulneretur','vulneremur','vulneremini','vulnerentur','Pres. Subj. Pasivo') } },
             'clauditur': { enunciado: "claudo, -ere", es: { morph: "Verbo (3ª conj), 3ª sg, Pres. Ind. Pasivo", syntax: "Núcleo del Predicado", def: "es ahogada, se cierra", etym: "PIE *klaw-", tabla: buildVerbTable('claudor','clauderis','clauditur','claudimur','claudimini','clauduntur','Pres. Ind. Pasivo') } },
             'cadit': { enunciado: "cado, -ere", es: { morph: "Verbo (3ª conj), 3ª sg, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "cae", etym: "PIE *ḱad-", tabla: buildVerbTable('cado','cadis','cadit','cadimus','caditis','cadunt','Pres. Ind. Activo') } },
+            'exeunt': { enunciado: "exeo, exire", es: { morph: "Verbo Irreg, 3ª pl, Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "salen", exp: "Compuesto de ex + eo.", etym: "PIE *h₁ey-", tabla: buildVerbTable('exeo','exis','exit','eximus','exitis','exeunt','Pres. Ind. Activo') } },
+            'est': { enunciado: "sum, esse", es: { morph: "Verbo Irreg, 3ª sg, Pres. Ind.", syntax: "Verbo Auxiliar", def: "es / ha sido (junto a inventum)", etym: "PIE *h₁es-", tabla: buildVerbTable('sum','es','est','sumus','estis','sunt','Pres. Ind. Activo') } },
 
-            // Verbos Irregulares, Deponentes y Formas Nominales
-            'apparere': { enunciado: "appareo, -ere", es: { morph: "Verbo, Infinitivo Pres Activo", syntax: "Núcleo (Or. Infinitivo)", def: "aparecer" } },
-            'parari': { enunciado: "paro, -are", es: { morph: "Verbo, Infinitivo Pres Pasivo", syntax: "Núcleo (Or. Infinitivo)", def: "que fuera preparado" } },
-            'ferre': { enunciado: "fero, ferre", es: { morph: "Verbo Irregular, Infinitivo Pres Act", syntax: "C. Directo (Infinitivo Complemento)", def: "llevar", exp: "Verbo irregular polirrizo." } },
-            'dormire': { enunciado: "dormio, -ire", es: { morph: "Verbo (4ª), Infinitivo Pres Act", syntax: "C. Directo (Inf. Complemento)", def: "dormir" } },
-            'audet': { enunciado: "audeo, -ere, ausus sum", es: { morph: "Verbo Semideponente, 3ª sg Pres. Ind.", syntax: "Núcleo del Predicado", def: "se atreve", exp:"Forma activa, pero semideponente.", tabla: buildVerbTable('audeo','audes','audet','audemus','audetis','audent','Pres. Ind. Semideponente') } },
-            'solet': { enunciado: "soleo, -ere, solitus sum", es: { morph: "Verbo Semideponente, 3ª sg Pres. Ind.", syntax: "Núcleo del Predicado", def: "suele", tabla: buildVerbTable('soleo','soles','solet','solemus','soletis','solent','Pres. Ind. Semideponente') } },
-            'hortatur': { enunciado: "hortor, -ari", es: { morph: "Verbo Deponente, 3ª sg Pres. Ind.", syntax: "Núcleo del Predicado", def: "exhorta, anima", exp: "Forma pasiva, significado activo.", tabla: buildVerbTable('hortor','hortaris','hortatur','hortamur','hortamini','hortantur','Pres. Ind. Deponente') } },
-            'consolatur': { enunciado: "consolor, -ari", es: { morph: "Verbo Deponente, 3ª sg Pres. Ind.", syntax: "Núcleo del Predicado", def: "consuela", tabla: buildVerbTable('consolor','consolaris','consolatur','consolamur','consolamini','consolantur','Pres. Ind. Deponente') } },
+            // ================= DEPONENTES Y SEMIDEPONENTES =================
+            'audet': { enunciado: "audeo, -ere, ausus sum", es: { morph: "Verbo Semideponente (2ª), 3ª sg Pres. Ind.", syntax: "Núcleo del Predicado", def: "se atreve", exp:"Forma activa en presente, pero semideponente en perfecto.", tabla: buildVerbTable('audeo','audes','audet','audemus','audetis','audent','Pres. Ind. Semideponente') } },
+            'solet': { enunciado: "soleo, -ere, solitus sum", es: { morph: "Verbo Semideponente (2ª), 3ª sg Pres. Ind.", syntax: "Núcleo del Predicado", def: "suele, acostumbra", tabla: buildVerbTable('soleo','soles','solet','solemus','soletis','solent','Pres. Ind. Semideponente') } },
+            'hortatur': { enunciado: "hortor, -ari", es: { morph: "Verbo Deponente (1ª), 3ª sg Pres. Ind.", syntax: "Núcleo del Predicado", def: "exhorta, anima", exp: "Forma pasiva, significado activo.", tabla: buildVerbTable('hortor','hortaris','hortatur','hortamur','hortamini','hortantur','Pres. Ind. Deponente') } },
+            'consolatur': { enunciado: "consolor, -ari", es: { morph: "Verbo Deponente (1ª), 3ª sg Pres. Ind.", syntax: "Núcleo del Predicado", def: "consuela", tabla: buildVerbTable('consolor','consolaris','consolatur','consolamur','consolamini','consolantur','Pres. Ind. Deponente') } },
             'moritur': { enunciado: "morior, mori", es: { morph: "Verbo Deponente (3ª mixta), 3ª sg Pres. Ind.", syntax: "Núcleo del Predicado", def: "muere", tabla: buildVerbTable('morior','moreris','moritur','morimur','morimini','moriuntur','Pres. Ind. Deponente') } },
-            'fuge': { enunciado: "fugio, -ere", es: { morph: "Verbo, 2ª sg Imperativo Pres Act", syntax: "Núcleo del Predicado", def: "¡huye!" } },
-            'flecte': { enunciado: "flecto, -ere", es: { morph: "Verbo, 2ª sg Imperativo Pres Act", syntax: "Núcleo del Predicado", def: "¡dobla, gira!" } },
-            'exeunt': { enunciado: "exeo, exire", es: { morph: "Verbo Irregular, 3ª pl Pres. Ind. Activo", syntax: "Núcleo del Predicado", def: "salen", exp: "Compuesto de ex + eo." } },
-            'est': { enunciado: "sum, esse", es: { morph: "Verbo Irregular, 3ª sg Pres. Ind.", syntax: "Verbo Auxiliar", def: "es / ha sido (junto a inventum)" } },
 
+            // ================= FORMAS NOMINALES (Infinitivos, Imperativos y Participios) =================
+            'apparere': { enunciado: "appareo, -ere", es: { morph: "Verbo (2ª), Infinitivo Pres Activo", syntax: "Núcleo (Or. Infinitivo)", def: "aparecer", tabla: buildVerbTable('appareo','appares','apparet','apparemus','apparetis','apparent','Pres. Ind. Activo (Para referencia)') } },
+            'parari': { enunciado: "paro, -are", es: { morph: "Verbo (1ª), Infinitivo Pres Pasivo", syntax: "Núcleo (Or. Infinitivo)", def: "que fuera preparado / ser preparado", tabla: buildVerbTable('paror','pararis','paratur','paramur','paramini','parantur','Pres. Ind. Pasivo (Para referencia)') } },
+            'ferre': { enunciado: "fero, ferre", es: { morph: "Verbo Irreg, Infinitivo Pres Act", syntax: "C. Directo (Infinitivo Complemento)", def: "llevar", exp: "Verbo irregular polirrizo.", tabla: buildVerbTable('fero','fers','fert','ferimus','fertis','ferunt','Pres. Ind. Activo (Para ref)') } },
+            'dormire': { enunciado: "dormio, -ire", es: { morph: "Verbo (4ª), Infinitivo Pres Act", syntax: "C. Directo (Inf. Complemento)", def: "dormir", tabla: buildVerbTable('dormio','dormis','dormit','dormimus','dormitis','dormiunt','Pres. Ind. Activo (Para ref)') } },
+            'fuge': { enunciado: "fugio, -ere", es: { morph: "Verbo, 2ª sg Imperativo Pres Act", syntax: "Núcleo del Predicado", def: "¡huye!", tabla: buildVerbTable('fugio','fugis','fugit','fugimus','fugitis','fugiunt','Pres. Ind. Activo (Para ref)') } },
+            'flecte': { enunciado: "flecto, -ere", es: { morph: "Verbo, 2ª sg Imperativo Pres Act", syntax: "Núcleo del Predicado", def: "¡dobla, gira!", tabla: buildVerbTable('flecto','flectis','flectit','flectimus','flectitis','flectunt','Pres. Ind. Activo (Para ref)') } },
+            
             // Participios
-            'visa': { enunciado: "video, -ere", es: { morph: "Participio Perfecto Pasivo, Fem, Sg", syntax: "Ablativo (Núcleo de Abl. Absoluto)", def: "vista", exp: "Forma un ablativo absoluto con 're mira'." } },
-            'exterrita': { enunciado: "exterreo, -ere", es: { morph: "Participio Perfecto Pasivo, Fem, Sg", syntax: "Nominativo (Atributo/Concertado)", def: "aterrorizada" } },
-            'perterritus': { enunciado: "perterreo, -ere", es: { morph: "Participio Perfecto Pasivo, Masc, Sg", syntax: "Nominativo (Concertado)", def: "muy asustado" } },
-            'ostendens': { enunciado: "ostendo, -ere", es: { morph: "Participio Presente Activo, Masc, Sg", syntax: "Nominativo (Concertado)", def: "mostrando" } },
-            'trepidantem': { enunciado: "trepido, -are", es: { morph: "Participio Presente Activo, Masc, Sg", syntax: "Acusativo (Concertado con amicum)", def: "que temblaba / temblando" } },
-            'complexus': { enunciado: "complector, -i", es: { morph: "Participio Perfecto de Deponente", syntax: "Nominativo (Concertado activo)", def: "habiendo abrazado", exp: "Al ser deponente, su participio de perfecto tiene valor activo." } },
-            'obscurato': { enunciado: "obscuro, -are", es: { morph: "Participio Perfecto Pasivo, Masc, Sg", syntax: "Ablativo (Núcleo de Abl. Absoluto)", def: "oscurecido" } },
-            'flante': { enunciado: "flo, -are", es: { morph: "Participio Presente Activo, Masc, Sg", syntax: "Ablativo (Núcleo de Abl. Absoluto)", def: "soplando" } },
-            'inventum': { enunciado: "invenio, -ire", es: { morph: "Participio Perfecto Pasivo, Neutro, Sg", syntax: "Nominativo (Forma Pret. Perf. Pasivo con 'est')", def: "encontrado" } },
-            'requiescenti': { enunciado: "requiesco, -ere", es: { morph: "Participio Presente Activo, Dativo Sg", syntax: "Dativo (Régimen de similius)", def: "al que descansa" } },
-
-            // Adjetivos
-            'septima': { enunciado: "septimus, -a, -um", es: { morph: "Adjetivo Numeral, Fem, Sg", syntax: "Ablativo (Adyacente)", def: "séptima" } },
-            'mea': { enunciado: "meus, -a, -um", es: { morph: "Adjetivo Posesivo, Fem, Sg", syntax: "Nominativo (Adyacente)", def: "mía, mi" } },
-            'inusitatam': { enunciado: "inusitatus, -a, -um", es: { morph: "Adjetivo, Fem, Sg", syntax: "Acusativo (Adyacente)", def: "inusual" } },
-            'mira': { enunciado: "mirus, -a, -um", es: { morph: "Adjetivo, Fem, Sg", syntax: "Ablativo (Adyacente)", def: "asombrosa, admirable" } },
-            'magnum': { enunciado: "magnus, -a, -um", es: { morph: "Adjetivo, Neutro, Sg", syntax: "Acusativo (Adyacente)", def: "grande" } },
-            'gravis': { enunciado: "gravis, -e", es: { morph: "Adjetivo (3ª decl), Masc, Sg", syntax: "Nominativo (Adyacente)", def: "pesada, grave" } },
-            'nullam': { enunciado: "nullus, -a, -um", es: { morph: "Adjetivo Pronominal, Fem, Sg", syntax: "Acusativo (Adyacente)", def: "ningún, ninguna" } },
-            'fortes': { enunciado: "fortis, -e", es: { morph: "Adjetivo (3ª decl) sustantivado, Masc, Pl", syntax: "Acusativo (C. Directo)", def: "a los valientes" } },
-            'suum': { enunciado: "suus, -a, -um", es: { morph: "Adjetivo Posesivo, Masc, Sg", syntax: "Acusativo (Adyacente)", def: "su, suyo" } },
-            'ingentes': { enunciado: "ingens, -ntis", es: { morph: "Adjetivo (3ª decl), Fem, Pl", syntax: "Nominativo (Adyacente)", def: "enormes, inmensas" } },
-            'tanto': { enunciado: "tantus, -a, -um", es: { morph: "Adjetivo, Neutro, Sg", syntax: "Ablativo (Adyacente)", def: "tan gran" } },
-            'postero': { enunciado: "posterus, -a, -um", es: { morph: "Adjetivo, Masc, Sg", syntax: "Ablativo (Adyacente)", def: "al siguiente" } },
-            'crasso': { enunciado: "crassus, -a, -um", es: { morph: "Adjetivo, Masc, Sg", syntax: "Ablativo (Adyacente)", def: "denso, grueso" } },
-            'clarissimus': { enunciado: "clarus, -a, -um (Superlativo)", es: { morph: "Adjetivo Superlativo, Masc, Sg", syntax: "Nominativo (Adyacente)", def: "ilustrísimo, muy famoso" } },
-            'integrum': { enunciado: "integer, -gra, -grum", es: { morph: "Adjetivo, Neutro, Sg", syntax: "Nominativo (Predicativo)", def: "intacto, íntegro" } },
-            'similius': { enunciado: "similis, -e (Comparativo)", es: { morph: "Adjetivo Comparativo, Neutro, Sg", syntax: "Nominativo (Predicativo)", def: "más parecido", exp: "Rige caso Dativo (requiescenti)." } },
-
-            // Pronombres
-            'ille': { enunciado: "ille, illa, illud", es: { morph: "Pronombre Demostrativo, Masc, Sing", syntax: "Nominativo (Sujeto)", def: "aquel, él (Plinio)" } },
-            'quae': { enunciado: "qui, quae, quod", es: { morph: "Pronombre Relativo, Fem, Sing", syntax: "Nominativo (Sujeto)", def: "la cual, quien" } },
-            'unde': { enunciado: "unde", es: { morph: "Adverbio/Pronombre Relativo", syntax: "C.C. Origen", def: "de donde" } },
-            'alii': { enunciado: "alius, -a, -ud", es: { morph: "Pronombre Indefinido, Masc, Pl", syntax: "Nominativo (Sujeto)", def: "otros" } },
-            'eum': { enunciado: "is, ea, id", es: { morph: "Pronombre Demostrativo, Masc, Sing", syntax: "Acusativo (C. Directo)", def: "a él" } },
-            'quem': { enunciado: "qui, quae, quod", es: { morph: "Pronombre Relativo, Masc, Sing", syntax: "Acusativo (C. Directo)", def: "al cual" } },
-            'eius': { enunciado: "is, ea, id", es: { morph: "Pronombre Demostrativo, Masc, Sing", syntax: "Genitivo (C. del Nombre)", def: "su (de él)" } }
+            'visa': { enunciado: "video, -ere", es: { morph: "Participio Perfecto Pasivo, Fem, Sg", syntax: "Ablativo (Núcleo de Abl. Absoluto)", def: "vista", exp: "Forma ablativo absoluto con 're mira'.", tabla: buildNounTable('visa','visa','visam','visae','visae','visa','visae','visae','visas','visarum','visis','visis') } },
+            'exterrita': { enunciado: "exterreo, -ere", es: { morph: "Participio Perfecto Pasivo, Fem, Sg", syntax: "Nominativo (Atributo/Concertado)", def: "aterrorizada", tabla: buildNounTable('exterrita','exterrita','exterritam','exterritae','exterritae','exterrita','exterritae','exterritae','exterritas','exterritarum','exterritis','exterritis') } },
+            'perterritus': { enunciado: "perterreo, -ere", es: { morph: "Participio Perfecto Pasivo, Masc, Sg", syntax: "Nominativo (Concertado)", def: "muy asustado", tabla: buildNounTable('perterritus','perterrite','perterritum','perterriti','perterrito','perterrito','perterriti','perterriti','perterritos','perterritorum','perterritis','perterritis') } },
+            'ostendens': { enunciado: "ostendo, -ere", es: { morph: "Participio Presente Activo, Masc, Sg", syntax: "Nominativo (Concertado)", def: "mostrando", tabla: buildNounTable('ostendens','ostendens','ostendentem','ostendentis','ostendenti','ostendente','ostendentes','ostendentes','ostendentes','ostendentium','ostendentibus','ostendentibus') } },
+            'trepidantem': { enunciado: "trepido, -are", es: { morph: "Participio Presente Activo, Masc, Sg", syntax: "Acusativo (Concertado con amicum)", def: "que temblaba / temblando", tabla: buildNounTable('trepidans','trepidans','trepidantem','trepidantis','trepidanti','trepidante','trepidantes','trepidantes','trepidantes','trepidantium','trepidantibus','trepidantibus') } },
+            'complexus': { enunciado: "complector, -i", es: { morph: "Participio Perfecto de Deponente", syntax: "Nominativo (Concertado activo)", def: "habiendo abrazado", exp: "Al ser deponente, el perfecto traduce activo.", tabla: buildNounTable('complexus','complexe','complexum','complexi','complexo','complexo','complexi','complexi','complexos','complexorum','complexis','complexis') } },
+            'obscurato': { enunciado: "obscuro, -are", es: { morph: "Participio Perfecto Pasivo, Masc, Sg", syntax: "Ablativo (Núcleo de Abl. Absoluto)", def: "oscurecido", tabla: buildNounTable('obscuratus','obscurate','obscuratum','obscurati','obscurato','obscurato','obscurati','obscurati','obscuratos','obscuratorum','obscuratis','obscuratis') } },
+            'flante': { enunciado: "flo, -are", es: { morph: "Participio Presente Activo, Masc, Sg", syntax: "Ablativo (Núcleo de Abl. Absoluto)", def: "soplando", tabla: buildNounTable('flans','flans','flantem','flantis','flanti','flante','flantes','flantes','flantes','flantium','flantibus','flantibus') } },
+            'inventum': { enunciado: "invenio, -ire", es: { morph: "Participio Perfecto Pasivo, Neutro, Sg", syntax: "Nominativo (Pret. Perf. Pasivo con 'est')", def: "encontrado", tabla: buildNounTable('inventum','inventum','inventum','inventi','invento','invento','inventa','inventa','inventa','inventorum','inventis','inventis') } },
+            'requiescenti': { enunciado: "requiesco, -ere", es: { morph: "Participio Presente Activo, Dativo Sg", syntax: "Dativo (Régimen de similius)", def: "al que descansa", tabla: buildNounTable('requiescens','requiescens','requiescentem','requiescentis','requiescenti','requiescente','requiescentes','requiescentes','requiescentes','requiescentium','requiescentibus','requiescentibus') } }
         };
 
         window.onload = function() {
@@ -579,9 +620,9 @@
                 document.getElementById('finalTime').innerText = localStorage.getItem('vesubio_pro_timeStr') || "00:00";
                 document.getElementById('finalMistakes').innerText = localStorage.getItem('vesubio_pro_mistakes') || "0";
                 document.getElementById('finalScore').innerText = localStorage.getItem('vesubio_pro_score') || "0 pts";
-                hide('introStage'); show('victoryStage');
+                hide('introStage'); hide('gameStage'); hide('defeatStage'); show('victoryStage');
             } else if (status === 'lost') {
-                hide('introStage'); show('defeatStage');
+                hide('introStage'); hide('gameStage'); hide('victoryStage'); show('defeatStage');
             } else if (status === 'playing') {
                 const endTime = parseInt(localStorage.getItem('vesubio_pro_endTime'));
                 teamName = localStorage.getItem('vesubio_pro_team');
@@ -601,9 +642,6 @@
             return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
         }
 
-        // ==========================================
-        // LATINITATIS PRO: ORACULUM API
-        // ==========================================
         function openApiModal() {
             document.getElementById('apiModal').classList.add('active');
             document.getElementById('apiKeyInput').value = localStorage.getItem('groq_key') || '';
@@ -643,7 +681,7 @@
         async function analyze(word) {
             openOracle(); 
             const c = document.getElementById('oracle-content'); 
-            c.innerHTML = "<p class='py-48 text-center animate-pulse font-cinzel text-orange-400 uppercase tracking-widest'>Invocando el conocimiento de Apolo...</p>";
+            c.innerHTML = "<div class='flex justify-center items-center h-full'><p class='animate-pulse font-cinzel text-orange-400 uppercase tracking-widest text-lg'>Invocando el conocimiento de Apolo...</p></div>";
             
             const normalizedWord = word.toLowerCase();
             
@@ -656,8 +694,8 @@
                 }
 
                 c.innerHTML = `
-                    <div class="mb-10 border-b border-slate-700 pb-6 text-center">
-                        <h3 class="greek-display text-5xl md:text-7xl font-black text-white tracking-tighter mb-4">${word}</h3>
+                    <div class="mb-10 border-b border-slate-700 pb-6 text-center mt-8">
+                        <h3 class="greek-display text-5xl md:text-6xl font-black text-white tracking-tighter mb-4">${word}</h3>
                         <p class="text-xl font-bold text-orange-500 uppercase tracking-widest font-serif lowercase">${res.enunciado}</p>
                     </div>
                     
@@ -669,10 +707,10 @@
                             <p class="text-2xl italic font-serif text-white mb-6 leading-tight">"${res.es.def}"</p>
                             ${res.es.exp ? `<div class="bg-red-950/40 p-4 rounded-xl mb-6 text-yellow-200 text-sm font-serif border border-red-800/50 shadow-sm leading-relaxed"><b>Nota Gramatical:</b><br>${res.es.exp}</div>` : ''}
                             <div class="bg-slate-800 p-4 rounded-xl text-sm italic leading-relaxed text-slate-400"><b>Etimología (Raíces PIE):</b><br>${res.es.etym || 'Desconocida'}</div>
-                            ${res.tabla ? `<div class="mt-6">${res.tabla}</div>` : ''}
+                            ${res.es && res.es.tabla ? `<div class="mt-6">${res.es.tabla}</div>` : ''}
                         </div>
                     </div>`;
-            } catch (e) { c.innerHTML = `<p class='p-6 bg-red-900/50 border border-red-500 text-red-200 rounded text-center font-bold'>Error: ${e.message}</p>`; }
+            } catch (e) { c.innerHTML = `<div class='mt-20 p-6 bg-red-900/50 border border-red-500 text-red-200 rounded text-center font-bold'>Error IA: ${e.message}</div>`; }
         }
 
         async function generateExercise() {
@@ -734,7 +772,7 @@
             if (localStorage.getItem('vesubio_pro_status') === 'won') return;
             localStorage.setItem('vesubio_pro_status', 'lost');
             if (timerInterval) clearInterval(timerInterval);
-            hide('gameStage'); hide('gameHeader'); hide('introStage'); show('defeatStage');
+            hide('gameStage'); hide('gameHeader'); hide('introStage'); hide('victoryStage'); show('defeatStage');
         }
 
         function victory() {
@@ -756,21 +794,23 @@
             localStorage.setItem('vesubio_pro_mistakes', mistakes.toString());
             localStorage.setItem('vesubio_pro_score', finalScore + " pts");
 
-            hide('gameStage'); hide('gameHeader'); show('victoryStage');
+            hide('gameStage'); hide('gameHeader'); hide('defeatStage'); show('victoryStage');
         }
 
-        function normalizeString(str) { return str.toLowerCase().trim().replace(/[.,;:!?"]/g, ''); }
+        function normalizeString(str) { return str.toLowerCase().trim().replace(/[.,;:"!?()]/g, ''); }
 
         function checkPrueba1() {
             const q1 = normalizeString(document.getElementById('p1-q1').value);
             const q2 = normalizeString(document.getElementById('p1-q2').value);
             const q3 = normalizeString(document.getElementById('p1-q3').value);
+            const q4 = normalizeString(document.getElementById('p1-q4').value);
 
             const isQ1Correct = q1 === 'audet';
             const isQ2Correct = q2 === 'manibus';
             const isQ3Correct = q3 === 'ostendens';
+            const isQ4Correct = q4 === 'parari';
 
-            if (isQ1Correct && isQ2Correct && isQ3Correct) {
+            if (isQ1Correct && isQ2Correct && isQ3Correct && isQ4Correct) {
                 document.getElementById('p1-error').classList.add('hidden');
                 const btn = document.querySelector('#prueba1 button');
                 btn.innerText = "¡Faro I Encendido!";
@@ -817,16 +857,17 @@
             const q1 = document.getElementById('p3-q1').value;
             const q2 = document.getElementById('p3-q2').value;
             const q3 = document.getElementById('p3-q3').value;
+            const q4 = document.getElementById('p3-q4').value;
 
-            if (q1 === 'vulcano' && q2 === 'pompeya' && q3 === 'prefecto') {
+            if (q1 === 'vulcano' && q2 === 'pompeya' && q3 === 'prefecto' && q4 === 'epistolas') {
                 document.getElementById('p3-error').classList.add('hidden');
                 const btn = document.querySelector('#prueba3 button');
                 btn.innerText = "¡Faro III Encendido!";
                 btn.disabled = true;
 
-                const p4 = document.getElementById('prueba4');
-                p4.classList.remove('opacity-50', 'pointer-events-none');
-                p4.classList.add('ring-2', 'ring-red-500', 'shadow-[0_0_20px_rgba(239,68,68,0.3)]');
+                const p4_section = document.getElementById('prueba4');
+                p4_section.classList.remove('opacity-50', 'pointer-events-none');
+                p4_section.classList.add('ring-2', 'ring-red-500', 'shadow-[0_0_20px_rgba(239,68,68,0.3)]');
                 document.getElementById('prueba3').classList.remove('ring-2', 'ring-emerald-500');
                 document.getElementById('prueba3').classList.add('opacity-80');
             } else {
@@ -844,8 +885,8 @@
             const l5 = parseInt(document.getElementById('lock5').value, 10);
             const l6 = parseInt(document.getElementById('lock6').value, 10);
 
-            // Código: 5 (dies 5ª decl), 1 (properat 1ª conj), 6 (lapidibus ablativo), 3 (3 abl absolutos), 3 (Epístola), 7 (V-u-l-c-a-n-o)
-            if (l1 === 5 && l2 === 1 && l3 === 6 && l4 === 3 && l5 === 3 && l6 === 7) {
+            // Código Final: 5-1-7-3-6-3
+            if (l1 === 5 && l2 === 1 && l3 === 7 && l4 === 3 && l5 === 6 && l6 === 3) {
                 victory();
             } else {
                 mistakes++; localStorage.setItem('vesubio_pro_mistakes', mistakes.toString());
