@@ -467,6 +467,16 @@
     </div>
 
     <script>
+        // --- VARIABLES GLOBALES DEL JUEGO ---
+        let timerInterval;
+        let timeRemaining = 45 * 60; // 45 minutos en segundos
+        let teamName = "";
+        let mistakes = 0;
+        const BASE_SCORE = 10000; // Puntuación base para calcular el resultado final
+
+        // Funciones Generadoras de Tablas Gramaticales
+        function buildNounTable(nomS, vocS, accS, genS, datS, ablS, nomP, vocP, accP, genP, datP, ablP) {
+            return `<table class="w-full text-xs text-left text-slate-300 border-collapse border border-slate-700 mt-4 shadow-lg">
         // Funciones Generadoras de Tablas Gramaticales
         function buildNounTable(nomS, vocS, accS, genS, datS, ablS, nomP, vocP, accP, genP, datP, ablP) {
             return `<table class="w-full text-xs text-left text-slate-300 border-collapse border border-slate-700 mt-4 shadow-lg">
