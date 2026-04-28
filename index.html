@@ -467,11 +467,11 @@
         let teamName = "";
         let mistakes = 0;
         const BASE_SCORE = 10000; // Puntuación base para calcular el resultado final
-
-        // Funciones Generadoras de Tablas Gramaticales
-        function buildNounTable(nomS, vocS, accS, genS, datS, ablS, nomP, vocP, accP, genP, datP, ablP) {
-            return `<table class="w-full text-xs text-left text-slate-300 border-collapse border border-slate-700 mt-4 shadow-lg">
-                <thead class="bg-orange-950/70 text-orange-400">
+        
+      // Funciones Generadoras de Tablas Gramaticales
+        function buildNounTable(nomS, vocS, accS, genS, datS, ablS, nomP, vocP, accP, genP, datP, ablP) {
+            return `<table class="w-full text-xs text-left text-slate-300 border-collapse border border-slate-700 mt-4 shadow-lg">
+                <thead class="bg-orange-950/70 text-orange-400">
                     <tr><th class="border border-slate-700 p-2 text-center" colspan="3"><i data-lucide="book-open" class="inline w-3 h-3 mr-1"></i> Cuadro de Flexión Nominal</th></tr>
                     <tr><th class="border border-slate-700 p-2">Caso</th><th class="border border-slate-700 p-2">Singular</th><th class="border border-slate-700 p-2">Plural</th></tr>
                 </thead>
@@ -658,7 +658,7 @@
             'requiescenti': { enunciado: "requiesco, -ere", es: { morph: "Participio Presente Activo, Dativo Sg", syntax: "Dativo (Régimen de similius)", def: "al que descansa", tabla: buildNounTable('requiescens','requiescens','requiescentem','requiescentis','requiescenti','requiescente','requiescentes','requiescentes','requiescentes','requiescentium','requiescentibus','requiescentibus') } }
         };
 
-       wwindow.onload = function() {
+       window.onload = function() {
             lucide.createIcons();
             /* ... código del diccionario ... */
             
