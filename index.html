@@ -112,21 +112,19 @@
         </div>
     </header>
 
-    <div class="mb-6 bg-orange-950/30 p-6 rounded border border-orange-900/50">
-                <label for="teamName" class="block text-orange-500 font-cinzel text-lg mb-3">Identificación de los Escribas:</label>
-                <input type="text" id="teamName" class="w-full bg-black/50 border-2 border-orange-900 text-white p-3 rounded font-cinzel focus:border-orange-500 focus:outline-none transition text-center text-lg shadow-inner" placeholder="Escribid vuestros nombres (Ej: Lucía, Marcos y Elena)" autocomplete="off">
-                <p id="name-error" class="text-red-400 text-sm mt-3 hidden font-bold">⚠️ Debéis identificaros antes de acceder al papiro.</p>
+    <div id="introStage" class="w-full max-w-3xl flex flex-col items-center text-center mt-6 md:mt-12 space-y-8">
+        <h1 class="text-5xl md:text-6xl text-orange-500 tracking-widest uppercase text-shadow-sm flex flex-col items-center">
+            Eruptio<br><span class="text-4xl md:text-5xl text-slate-300 mt-2">Vesuvii</span>
+        </h1>
+        
+        <div class="bg-black/60 p-8 rounded-lg border border-orange-900/50 shadow-2xl backdrop-blur-sm w-full max-w-2xl">
+            <div class="mb-8 rounded-lg border border-orange-900/50 overflow-hidden shadow-inner bg-black w-full aspect-video relative">
+                <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/dY_3ggKg0Bc?start=15" title="Erupción del Vesubio" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
 
             <p class="text-lg md:text-xl leading-relaxed mb-8 text-slate-300 text-justify">
                 "Miseno, 24 de agosto del 79 d.C. El monte Vesubio acaba de estallar, oscureciendo el cielo. El almirante Plinio el Viejo ha zarpado valientemente para rescatar a los supervivientes en la costa, pero una densa nube de gas tóxico y cenizas amenaza con sepultarlo todo. Plinio el Joven ha redactado un informe crucial. Descifrad sus palabras para activar el faro del puerto y guiar a la flota de regreso. Tenéis 45 minutos. Vuestra única salvación: el latín."
             </p>
-            
-            <div class="mb-6 bg-orange-950/30 p-6 rounded border border-orange-900/50">
-                <label for="teamName" class="block text-orange-500 font-cinzel text-lg mb-3">Identificación de los Escribas:</label>
-                <input type="text" id="teamName" class="w-full bg-black/50 border-2 border-orange-900 text-white p-3 rounded font-cinzel focus:border-orange-500 focus:outline-none transition text-center text-lg shadow-inner" placeholder="Escribid vuestros nombres (Ej: Lucía, Marcos y Elena)" autocomplete="off">
-                <p id="name-error" class="text-red-400 text-sm mt-3 hidden font-bold">⚠️ Debéis identificaros antes de acceder al papiro.</p>
-            </div>
 
             <div class="mb-8 bg-orange-950/30 p-6 rounded border border-orange-900/50 flex flex-col md:flex-row items-center justify-between gap-4">
                 <div class="text-left">
@@ -471,12 +469,9 @@
         const BASE_SCORE = 10000; // Puntuación base para calcular el resultado final
 
         // Funciones Generadoras de Tablas Gramaticales
-        function buildNounTable(nomS, vocS, accS, genS, datS, ablS, nomP, vocP, accP, genP, datP, ablP) {
-            return `<table class="w-full text-xs text-left text-slate-300 border-collapse border border-slate-700 mt-4 shadow-lg">
-        // Funciones Generadoras de Tablas Gramaticales
-        function buildNounTable(nomS, vocS, accS, genS, datS, ablS, nomP, vocP, accP, genP, datP, ablP) {
-            return `<table class="w-full text-xs text-left text-slate-300 border-collapse border border-slate-700 mt-4 shadow-lg">
-                <thead class="bg-orange-950/70 text-orange-400">
+        function buildNounTable(nomS, vocS, accS, genS, datS, ablS, nomP, vocP, accP, genP, datP, ablP) {
+            return `<table class="w-full text-xs text-left text-slate-300 border-collapse border border-slate-700 mt-4 shadow-lg">
+                <thead class="bg-orange-950/70 text-orange-400">
                     <tr><th class="border border-slate-700 p-2 text-center" colspan="3"><i data-lucide="book-open" class="inline w-3 h-3 mr-1"></i> Cuadro de Flexión Nominal</th></tr>
                     <tr><th class="border border-slate-700 p-2">Caso</th><th class="border border-slate-700 p-2">Singular</th><th class="border border-slate-700 p-2">Plural</th></tr>
                 </thead>
@@ -663,18 +658,14 @@
             'requiescenti': { enunciado: "requiesco, -ere", es: { morph: "Participio Presente Activo, Dativo Sg", syntax: "Dativo (Régimen de similius)", def: "al que descansa", tabla: buildNounTable('requiescens','requiescens','requiescentem','requiescentis','requiescenti','requiescente','requiescentes','requiescentes','requiescentes','requiescentium','requiescentibus','requiescentibus') } }
         };
 
-       window.onload = function() {
-            lucide.createIcons();
+       wwindow.onload = function() {
+            lucide.createIcons();
+            /* ... código del diccionario ... */
             
-            const container = document.getElementById('latin-container');
-            container.innerHTML = latinText.split(/\s+/).map((word) => {
-                const cleanWord = word.replace(/[.,;:"!?()]/g, '');
-                return `<span class="word-token" onclick="analyze('${cleanWord}')">${word}</span>`;
-            }).join(' ');
-
-            checkGameState();
-            loadTabula(); // <- Esta es la línea nueva que carga tus notas guardadas
-        };
+            localStorage.clear(); // <-- AÑADE ESTO SOLO MIENTRAS HACES PRUEBAS
+            checkGameState();
+            loadTabula(); 
+        };
 
         function checkGameState() {
             const status = localStorage.getItem('vesubio_pro_status'); 
