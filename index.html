@@ -141,6 +141,77 @@
     </div>
 
     <!-- OIKÓVA Paha (Victory Stage) -->
+    <div id="gameStage" class="w-full max-w-5xl flex flex-col items-center hidden-stage">
+        
+        <div class="pergamino p-6 md:p-10 rounded-lg w-full mb-8 relative">
+            <h2 class="text-2xl font-cinzel text-center mb-6 border-b border-orange-900/30 pb-4">Epistulae VI, 16</h2>
+            <div id="latin-container" class="text-lg md:text-xl leading-loose text-justify font-serif">
+                </div>
+            
+            <div id="exercise-area" class="mt-8 hidden bg-black/10 p-6 rounded border border-orange-900/30 shadow-inner"></div>
+            
+            <div class="mt-6 flex justify-center">
+                <button onclick="generateExercise()" class="px-6 py-2 bg-orange-900 hover:bg-orange-800 text-white rounded font-cinzel text-sm transition uppercase tracking-widest shadow-lg">
+                    Generar Reto IA (Magistral)
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+            
+            <div id="prueba1" class="bg-black/60 p-6 rounded-lg border border-orange-900/50 shadow-lg transition-all duration-300">
+                <h3 class="font-cinzel text-orange-500 mb-4 text-xl flex items-center gap-2"><i data-lucide="flame"></i> Faro I: Gramática</h3>
+                <input id="p1-q1" type="text" class="input-latino w-full mb-3" placeholder="Verbo semideponente...">
+                <input id="p1-q2" type="text" class="input-latino w-full mb-3" placeholder="Ablativo plural (manos)...">
+                <input id="p1-q3" type="text" class="input-latino w-full mb-3" placeholder="Participio presente (mostrando)...">
+                <input id="p1-q4" type="text" class="input-latino w-full mb-4" placeholder="Infinitivo pasivo...">
+                <p id="p1-error" class="text-red-500 text-sm hidden mb-3 font-bold">Erratum: Revisa tus respuestas.</p>
+                <button onclick="checkPrueba1()" class="w-full py-3 bg-orange-700 hover:bg-orange-600 text-white font-cinzel rounded transition uppercase">Encender Faro I</button>
+            </div>
+
+            <div id="prueba2" class="bg-black/60 p-6 rounded-lg border border-orange-900/50 shadow-lg opacity-50 pointer-events-none transition-all duration-300">
+                <h3 class="font-cinzel text-orange-500 mb-4 text-xl flex items-center gap-2"><i data-lucide="flame"></i> Faro II: Comprensión</h3>
+                <div class="text-slate-300 text-sm space-y-2 mb-4">
+                    <p>Pregunta 1:</p>
+                    <label class="block"><input type="radio" name="t1" value="a" class="mr-2"> Plinio zarpó para investigar y rescatar a Rectina.</label>
+                    <label class="block"><input type="radio" name="t1" value="b" class="mr-2"> Plinio huyó a Roma inmediatamente.</label>
+                    <p class="mt-2">Pregunta 2:</p>
+                    <label class="block"><input type="radio" name="t2" value="a" class="mr-2"> Murió quemado por la lava.</label>
+                    <label class="block"><input type="radio" name="t2" value="b" class="mr-2"> Murió asfixiado por los gases tóxicos.</label>
+                </div>
+                <textarea id="fullTranslation" class="w-full bg-black/50 text-slate-200 p-3 rounded border border-slate-700 focus:border-orange-500 outline-none text-sm h-20 mb-4 resize-none" placeholder="Escribe aquí un resumen del texto..."></textarea>
+                <p id="p2-error" class="text-red-500 text-sm hidden mb-3 font-bold">Erratum: Revisa tus opciones y asegúrate de escribir un texto.</p>
+                <button onclick="checkPrueba2()" class="w-full py-3 bg-orange-700 hover:bg-orange-600 text-white font-cinzel rounded transition uppercase">Encender Faro II</button>
+            </div>
+
+            <div id="prueba3" class="bg-black/60 p-6 rounded-lg border border-orange-900/50 shadow-lg opacity-50 pointer-events-none transition-all duration-300">
+                <h3 class="font-cinzel text-orange-500 mb-4 text-xl flex items-center gap-2"><i data-lucide="flame"></i> Faro III: Contexto</h3>
+                <input id="p3-q1" type="text" class="input-latino w-full mb-3" placeholder="Dios asociado al fuego...">
+                <input id="p3-q2" type="text" class="input-latino w-full mb-3" placeholder="Ciudad vecina destruida...">
+                <input id="p3-q3" type="text" class="input-latino w-full mb-3" placeholder="Cargo militar de Plinio...">
+                <input id="p3-q4" type="text" class="input-latino w-full mb-4" placeholder="Género literario del texto...">
+                <p id="p3-error" class="text-red-500 text-sm hidden mb-3 font-bold">Erratum: Revisa tus respuestas.</p>
+                <button onclick="checkPrueba3()" class="w-full py-3 bg-orange-700 hover:bg-orange-600 text-white font-cinzel rounded transition uppercase">Encender Faro III</button>
+            </div>
+
+            <div id="prueba4" class="bg-black/60 p-6 rounded-lg border border-orange-900/50 shadow-lg opacity-50 pointer-events-none transition-all duration-300 md:col-span-2 flex flex-col items-center text-center">
+                <h3 class="font-cinzel text-red-500 mb-2 text-2xl flex items-center gap-2"><i data-lucide="key-round"></i> El Gran Faro de Miseno</h3>
+                <p class="text-slate-400 text-sm mb-6 max-w-md">Introduce la secuencia final (Código: 5-1-7-3-6-3) para guiar a la flota de regreso.</p>
+                <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-6">
+                    <input id="lock1" type="number" class="candado-input" min="0" max="9">
+                    <input id="lock2" type="number" class="candado-input" min="0" max="9">
+                    <input id="lock3" type="number" class="candado-input" min="0" max="9">
+                    <input id="lock4" type="number" class="candado-input" min="0" max="9">
+                    <input id="lock5" type="number" class="candado-input" min="0" max="9">
+                    <input id="lock6" type="number" class="candado-input" min="0" max="9">
+                </div>
+                <p id="p4-error" class="text-red-500 text-sm hidden mb-4 font-bold">Secuencia incorrecta. La flota corre peligro.</p>
+                <button onclick="checkPrueba4()" class="px-10 py-4 bg-gradient-to-r from-red-800 to-red-900 hover:from-red-700 hover:to-red-800 text-white font-cinzel font-bold text-xl rounded shadow-[0_0_15px_rgba(153,27,27,0.5)] transition transform hover:scale-105 border border-red-500">
+                    ACTIVAR FARO PRINCIPAL
+                </button>
+            </div>
+        </div>
+    </div>
     <div id="victoryStage" class="w-full max-w-3xl flex flex-col items-center text-center mt-12 space-y-4 hidden-stage">
         <h1 class="text-5xl md:text-6xl font-cinzel text-yellow-500 text-shadow-sm mb-2">¡Flota a Salvo!</h1>
         <div class="text-8xl mb-2">⛵🌅</div>
@@ -443,12 +514,14 @@
             lucide.createIcons();
             
             const container = document.getElementById('latin-container');
-            container.innerHTML = latinText.split(/\s+/).map((word) => {
-                const cleanWord = word.replace(/[.,;:"!?()]/g, '');
-                return `<span class="word-token" onclick="analyze('${cleanWord}')">${word}</span>`;
-            }).join(' ');
+            if (container) { // <- Comprobación de seguridad
+                container.innerHTML = latinText.split(/\s+/).map((word) => {
+                    const cleanWord = word.replace(/[.,;:"!?()]/g, '');
+                    return `<span class="word-token" onclick="analyze('${cleanWord}')">${word}</span>`;
+                }).join(' ');
+            }
 
-            localStorage.clear(); // <-- AÑADE ESTO SOLO MIENTRAS HACES PRUEBAS
+            // localStorage.clear(); <-- Comenta o borra esta línea cuando el juego esté en producción
             checkGameState();
             loadTabula(); 
         };
